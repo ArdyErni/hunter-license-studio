@@ -1,0 +1,480 @@
+/* =========================================
+   HUNTER LICENSE (portrait card)
+   Sizes use cqw, so everything scales with the card width.
+========================================= */
+
+/* Square box that holds the card in either orientation.
+   Its side equals the card's height, so a portrait card (0.7 wide) and a
+   rotated, landscape card both fit without the layout jumping. */
+
+.hl-orient {
+  position: relative;
+  width: min(100%, 414px);
+  aspect-ratio: 1;
+  cursor: pointer;
+  outline: none;
+  touch-action: pan-y; /* page still scrolls vertically; sideways swipes are ours */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hl-orient:focus-visible {
+  border-radius: 12px;
+  outline: 2px solid #c9e66b;
+  outline-offset: 6px;
+}
+
+/* Floating bob lives here, outside the rotated element, so it always moves
+   up and down on screen. */
+
+.hl-float {
+  position: absolute;
+  inset: 0;
+  animation: hl-float 5s ease-in-out infinite;
+}
+
+.hl-orient:hover .hl-float,
+.hl-orient:focus-visible .hl-float {
+  animation-play-state: paused;
+}
+
+/* The card itself. Its rotation is set from React in quarter turns. */
+
+.hl-scene {
+  --hl-edge: #f4f4f1;
+  --hl-top: #f4f4f1;
+  --hl-band: #cfe7fa;
+  --hl-back: #bfe0f6;
+  --hl-ink: #141414;
+
+  position: absolute;
+  top: 0;
+  left: 15%;
+  width: 70%;
+  height: 100%;
+  container-type: inline-size;
+  perspective: 1100px;
+  transition: transform 550ms cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+/* Colorways (inspired by the reference licenses) */
+
+.hl-theme-green {
+  --hl-top: #2f9e2c;
+  --hl-band: #c9f0c1;
+  --hl-back: #c2193a;
+}
+
+.hl-theme-blue {
+  --hl-top: #ecece8;
+  --hl-band: #c3e2f8;
+  --hl-back: #bcdff6;
+}
+
+.hl-theme-red {
+  --hl-edge: #f2d51b;
+  --hl-top: #c4161c;
+  --hl-band: #f5df7a;
+  --hl-back: #c4161c;
+}
+
+/* 3D flip + float */
+
+.hl-card {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 700ms cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+.hl-card.flipped {
+  transform: rotateY(180deg);
+}
+
+@keyframes hl-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -9px;
+  }
+}
+
+.hl-face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  padding: 3cqw;
+  border-radius: 4.5cqw;
+  background: var(--hl-edge);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-shadow:
+    0 0 0 0.5cqw rgba(0, 0, 0, 0.25),
+    0 6cqw 9cqw rgba(0, 0, 0, 0.45);
+}
+
+.hl-back {
+  transform: rotateY(180deg);
+}
+
+/* ---------- FRONT ---------- */
+
+.hl-front-inner {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  overflow: hidden;
+  border: 0.5cqw solid rgba(0, 0, 0, 0.3);
+  border-radius: 2.5cqw;
+  background: var(--hl-band);
+}
+
+.hl-top {
+  flex-shrink: 0;
+  padding: 4cqw;
+  background: var(--hl-top);
+}
+
+.hl-frame {
+  padding: 4cqw 4cqw 3.5cqw;
+  border-radius: 2cqw;
+  background: var(--hl-ink);
+}
+
+.hl-logo-box {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1.6;
+  padding: 3cqw;
+  background: #fafafa;
+}
+
+.hl-mark {
+  width: 100%;
+  height: 100%;
+}
+
+.hl-hatch {
+  height: 11cqw;
+  margin-top: 3.5cqw;
+  border: 0.4cqw solid #777;
+  background: repeating-linear-gradient(
+    90deg,
+    #f2f2f2 0 1.1cqw,
+    #8d8d8d 1.1cqw 1.4cqw
+  );
+}
+
+.hl-band {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 4cqw;
+}
+
+/* The name plate: Hunter-script glyphs scale to fit the box. */
+
+.hl-plate {
+  height: 13cqw;
+  padding: 1.6cqw 2.5cqw;
+  border: 0.6cqw solid var(--hl-ink);
+  background: #fff;
+  color: var(--hl-ink);
+}
+
+.hl-glyphs {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Fine-print lines of script */
+
+.hl-lines {
+  display: grid;
+  gap: 1.8cqw;
+}
+
+.hl-line {
+  height: 5.6cqw;
+  padding: 0.7cqw 1.4cqw;
+  border: 0.5cqw solid var(--hl-ink);
+  background: #fff;
+  color: var(--hl-ink);
+}
+
+.hl-number-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 1.5cqw;
+  color: var(--hl-ink);
+  font-family: "Courier New", monospace;
+}
+
+.hl-number-row span {
+  font-size: 3cqw;
+  font-weight: 700;
+  letter-spacing: 0.3cqw;
+}
+
+.hl-number-row strong {
+  max-width: 55cqw;
+  overflow: hidden;
+  font-size: 4.6cqw;
+  letter-spacing: 0.4cqw;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- BACK ---------- */
+
+.hl-back-inner {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border: 0.5cqw solid rgba(0, 0, 0, 0.3);
+  border-radius: 2.5cqw;
+  background: var(--hl-back);
+}
+
+.hl-stripe {
+  position: absolute;
+  top: 0;
+  right: 8cqw;
+  bottom: 0;
+  width: 11cqw;
+  background: var(--hl-ink);
+}
+
+.hl-digits {
+  position: absolute;
+  top: 7cqw;
+  left: 8cqw;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5cqw;
+}
+
+.hl-digit {
+  display: grid;
+  place-items: center;
+  width: 9cqw;
+  height: 9cqw;
+  border: 0.9cqw solid var(--hl-ink);
+  color: var(--hl-ink);
+  font-family: "Courier New", monospace;
+  font-size: 5.5cqw;
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hl-float {
+    animation: none;
+  }
+
+  .hl-card,
+  .hl-scene {
+    transition: none;
+  }
+}
+
+/* =========================================
+   HOLOGRAPHIC + 3D TILT
+========================================= */
+
+/* Smooth tilt reset */
+.hl-scene {
+  transition: transform 550ms cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+/* While pointer is over the card, snap tilt instantly then let CSS ease on leave */
+.hl-orient:hover .hl-scene,
+.hl-orient:focus-visible .hl-scene {
+  transition: transform 150ms linear;
+}
+
+/* Holographic overlay — sits above card content, pointer-events off */
+.hl-face::before,
+.hl-face::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Layer 1: shifting rainbow sheen */
+.hl-face::before {
+  background: conic-gradient(
+    from calc(var(--hx, 0.5) * 360deg) at calc(var(--hx, 0.5) * 100%)
+      calc(var(--hy, 0.5) * 100%),
+    hsl(0 80% 60% / 0.18),
+    hsl(60 80% 60% / 0.18),
+    hsl(120 80% 60% / 0.18),
+    hsl(180 80% 60% / 0.18),
+    hsl(240 80% 60% / 0.18),
+    hsl(300 80% 60% / 0.18),
+    hsl(360 80% 60% / 0.18)
+  );
+  mix-blend-mode: color-dodge;
+  opacity: 0;
+  transition: opacity 300ms;
+}
+
+/* Layer 2: directional gloss highlight */
+.hl-face::after {
+  background: linear-gradient(
+    calc(var(--hx, 0.5) * 180deg + 90deg),
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0) 50%,
+    rgba(0, 0, 0, 0.08) 100%
+  );
+  mix-blend-mode: overlay;
+  opacity: 0;
+  transition: opacity 300ms;
+}
+
+/* Reveal both layers on hover */
+.hl-orient:hover .hl-face::before,
+.hl-orient:focus-visible .hl-face::before {
+  opacity: 1;
+}
+
+.hl-orient:hover .hl-face::after,
+.hl-orient:focus-visible .hl-face::after {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hl-orient:hover .hl-scene,
+  .hl-orient:focus-visible .hl-scene {
+    transition: none;
+  }
+}
+
+/* =========================================
+   NEN AURA STYLES
+   Glow lives on .hl-face box-shadow (extends existing shadow).
+   Ambient halo uses a ::before on .hl-scene (outside the card faces,
+   so it never conflicts with the holographic ::before/::after on .hl-face).
+========================================= */
+
+/* Shared halo element — sits behind both faces */
+.hl-scene::before {
+  content: "";
+  position: absolute;
+  inset: -8cqw;
+  border-radius: 8cqw;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 600ms ease;
+  z-index: -1;
+}
+
+/* --- TEN: soft golden pulse --- */
+
+.hl-aura-ten .hl-face {
+  box-shadow:
+    0 0 0 0.5cqw rgba(0, 0, 0, 0.25),
+    0 6cqw 9cqw rgba(0, 0, 0, 0.45),
+    0 0 8cqw 2cqw rgba(210, 170, 60, 0.35),
+    0 0 18cqw 4cqw rgba(210, 170, 60, 0.15);
+}
+
+.hl-aura-ten.hl-scene::before {
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(220, 180, 60, 0.18) 0%,
+    rgba(220, 180, 60, 0.06) 55%,
+    transparent 75%
+  );
+  opacity: 1;
+  animation: aura-ten-pulse 4s ease-in-out infinite;
+}
+
+@keyframes aura-ten-pulse {
+  0%, 100% { opacity: 0.7; }
+  50%       { opacity: 1;   }
+}
+
+/* --- ZETSU: almost invisible, muted --- */
+
+.hl-aura-zetsu .hl-face {
+  box-shadow:
+    0 0 0 0.5cqw rgba(0, 0, 0, 0.25),
+    0 6cqw 9cqw rgba(0, 0, 0, 0.45);
+  filter: saturate(0.7) brightness(0.96);
+}
+
+/* No halo — scene::before stays opacity 0 */
+
+/* --- REN: crimson intensity --- */
+
+.hl-aura-ren .hl-face {
+  box-shadow:
+    0 0 0 0.5cqw rgba(0, 0, 0, 0.25),
+    0 6cqw 9cqw rgba(0, 0, 0, 0.45),
+    0 0 6cqw 1cqw rgba(200, 30, 30, 0.5),
+    0 0 20cqw 5cqw rgba(200, 30, 30, 0.2);
+}
+
+.hl-aura-ren.hl-scene::before {
+  background: radial-gradient(
+    ellipse at 50% 60%,
+    rgba(200, 30, 30, 0.2) 0%,
+    rgba(200, 30, 30, 0.07) 50%,
+    transparent 72%
+  );
+  opacity: 1;
+  animation: aura-ren-surge 2.8s ease-in-out infinite;
+}
+
+@keyframes aura-ren-surge {
+  0%, 100% { opacity: 0.75; transform: scale(1);    }
+  50%       { opacity: 1;   transform: scale(1.04); }
+}
+
+/* --- HATSU: purple-magenta mystical --- */
+
+.hl-aura-hatsu .hl-face {
+  box-shadow:
+    0 0 0 0.5cqw rgba(0, 0, 0, 0.25),
+    0 6cqw 9cqw rgba(0, 0, 0, 0.45),
+    0 0 8cqw 2cqw rgba(150, 50, 210, 0.4),
+    0 0 22cqw 5cqw rgba(200, 40, 160, 0.15);
+}
+
+.hl-aura-hatsu.hl-scene::before {
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(160, 50, 220, 0.18) 0%,
+    rgba(200, 40, 160, 0.1) 45%,
+    transparent 72%
+  );
+  opacity: 1;
+  animation: aura-hatsu-flow 5s ease-in-out infinite;
+}
+
+@keyframes aura-hatsu-flow {
+  0%   { opacity: 0.7;  filter: hue-rotate(0deg);   }
+  50%  { opacity: 1;   filter: hue-rotate(30deg);  }
+  100% { opacity: 0.7;  filter: hue-rotate(0deg);   }
+}
+
+/* Reduced motion: kill all aura animations, keep the static glow */
+@media (prefers-reduced-motion: reduce) {
+  .hl-scene::before {
+    animation: none !important;
+  }
+
+  .hl-aura-ren.hl-scene::before {
+    transform: none !important;
+  }
+}

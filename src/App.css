@@ -1,0 +1,1163 @@
+/* =========================================
+   HUNTER LICENSE STUDIO
+   Main application styles
+========================================= */
+
+.studio {
+  --studio-bg: #10110f;
+  --studio-panel: #171815;
+  --studio-border: #30312b;
+  --studio-text: #eeeee5;
+  --studio-muted: #929388;
+  --studio-accent: #c9e66b;
+  --card-ivory: #e9e5d5;
+  --card-ink: #24251f;
+
+  min-height: 100vh;
+  color: var(--studio-text);
+  background:
+    radial-gradient(
+      ellipse at 75% 45%,
+      rgba(119, 132, 67, 0.09),
+      transparent 40%
+    ),
+    var(--studio-bg);
+  font-family: Inter, "Segoe UI", sans-serif;
+  font-size: 14px;
+}
+
+.studio *,
+.studio *::before,
+.studio *::after {
+  box-sizing: border-box;
+}
+
+.studio button,
+.studio input {
+  font: inherit;
+}
+
+.studio button {
+  cursor: pointer;
+}
+
+/* =========================================
+   HEADER
+========================================= */
+
+.topbar {
+  min-height: 76px;
+  padding: 0 6%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border-bottom: 1px solid var(--studio-border);
+  background: rgba(16, 17, 15, 0.88);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--studio-text);
+  text-decoration: none;
+}
+
+.brand-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  display: block;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 39px;
+  height: 39px;
+  border: 1px solid var(--studio-accent);
+  color: var(--studio-accent);
+  font-family: Georgia, serif;
+  font-size: 27px;
+  font-weight: 700;
+  transform: rotate(-4deg);
+}
+
+.brand > span:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.brand strong {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2.8px;
+}
+
+.brand small {
+  color: var(--studio-muted);
+  font-size: 9px;
+  letter-spacing: 2.2px;
+}
+
+.topbar-label {
+  color: var(--studio-muted);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+.reset-button {
+  padding: 9px 17px;
+  border: 1px solid var(--studio-border);
+  border-radius: 3px;
+  color: var(--studio-text);
+  background: transparent;
+  transition:
+    border-color 180ms ease,
+    color 180ms ease,
+    background 180ms ease;
+}
+
+.reset-button:hover {
+  border-color: var(--studio-accent);
+  color: var(--studio-accent);
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: var(--studio-muted);
+  background: transparent;
+  text-decoration: none;
+  transition:
+    color 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease;
+}
+
+.icon-btn:hover,
+.icon-btn:focus-visible {
+  border-color: var(--studio-border);
+  color: var(--studio-accent);
+  background: rgba(201, 230, 107, 0.06);
+  outline: none;
+}
+
+.icon-btn[aria-pressed="true"] {
+  color: var(--studio-accent);
+}
+
+/* =========================================
+   MAIN WORKSPACE
+========================================= */
+
+.workspace {
+  width: min(1320px, 100%);
+  min-height: calc(100vh - 137px);
+  margin: 0 auto;
+  padding: 30px 6% 40px;
+  display: grid;
+  grid-template-columns: minmax(280px, 380px) minmax(0, 1fr);
+  align-items: stretch;
+  gap: clamp(32px, 5vw, 72px);
+}
+
+/* =========================================
+   EDITOR PANEL
+========================================= */
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+}
+
+.section-heading {
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  display: inline-block;
+  color: var(--studio-accent);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 2.4px;
+}
+
+.section-heading h1 {
+  margin: 18px 0 12px;
+  color: var(--studio-text);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(32px, 3.2vw, 43px);
+  font-weight: 400;
+  letter-spacing: -1.6px;
+  line-height: 1.08;
+}
+
+.section-heading > p {
+  margin: 0;
+  color: var(--studio-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.form-section {
+  margin-bottom: 20px;
+}
+
+.form-section label {
+  display: block;
+  margin-bottom: 11px;
+  color: #d9d9cf;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.form-section input {
+  width: 100%;
+  min-height: 47px;
+  padding: 0 14px;
+  outline: none;
+  border: 1px solid var(--studio-border);
+  border-radius: 3px;
+  color: var(--studio-text);
+  background: #141511;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.form-section input::placeholder {
+  color: #696a60;
+}
+
+.form-section input:focus {
+  border-color: var(--studio-accent);
+  box-shadow: 0 0 0 2px rgba(201, 230, 107, 0.08);
+}
+
+/* Front/back selector */
+
+.side-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  padding: 4px;
+  border: 1px solid var(--studio-border);
+  border-radius: 4px;
+  background: #131410;
+}
+
+.side-option {
+  min-height: 37px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  color: var(--studio-muted);
+  background: transparent;
+  font-size: 12px;
+  transition: all 180ms ease;
+}
+
+.side-option:hover {
+  color: var(--studio-text);
+}
+
+.side-option.active {
+  border-color: #46483a;
+  color: var(--studio-accent);
+  background: #282a20;
+}
+
+/* Editor note */
+
+.editor-note {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  margin-top: auto;
+  padding: 18px 0 0;
+  border-top: 1px solid var(--studio-border);
+}
+
+.editor-note-top {
+  display: flex;
+  gap: 13px;
+}
+
+.note-symbol {
+  flex-shrink: 0;
+  color: var(--studio-accent);
+  font-size: 18px;
+}
+
+.editor-note p {
+  margin: 0;
+  color: var(--studio-muted);
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+/* =========================================
+   PREVIEW AREA
+========================================= */
+
+.preview-area {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.preview-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.preview-heading h2 {
+  margin: 9px 0 0;
+  color: var(--studio-text);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: -0.5px;
+}
+
+.preview-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--studio-muted);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  white-space: nowrap;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--studio-accent);
+  box-shadow: 0 0 9px rgba(201, 230, 107, 0.5);
+}
+
+/* =========================================
+   CARD STAGE
+========================================= */
+
+.card-stage {
+  position: relative;
+  display: grid;
+  flex: 1;
+  min-height: 390px;
+  place-items: center;
+  perspective: 1200px;
+  isolation: isolate;
+}
+
+.card-glow {
+  position: absolute;
+  z-index: -1;
+  width: min(90%, 480px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(201, 230, 107, 0.09) 0%,
+    rgba(201, 230, 107, 0.035) 38%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* The card rotates in 3D when the user switches sides. */
+
+.license-card {
+  position: relative;
+  width: min(100%, 440px);
+  aspect-ratio: 1.586 / 1;
+  transform-style: preserve-3d;
+  animation: card-float 5s ease-in-out infinite;
+  transition: transform 700ms cubic-bezier(0.2, 0.75, 0.25, 1);
+  filter: drop-shadow(0 28px 30px rgba(0, 0, 0, 0.3));
+}
+
+.license-card.flipped {
+  transform: rotateY(180deg);
+}
+
+.license-card:hover {
+  animation-play-state: paused;
+}
+
+.license-card.flipped:hover {
+  transform: rotateY(180deg) translateY(-4px);
+}
+
+@keyframes card-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -9px;
+  }
+}
+
+.license-face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border: 1px solid rgba(46, 46, 36, 0.5);
+  border-radius: 9px;
+  color: var(--card-ink);
+  background:
+    radial-gradient(
+      ellipse at 5% 5%,
+      rgba(255, 255, 255, 0.8),
+      transparent 38%
+    ),
+    linear-gradient(135deg, #f0ecde 0%, var(--card-ivory) 60%, #d9d5c5 100%);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-shadow:
+    inset 0 0 0 5px rgba(255, 255, 255, 0.16),
+    inset 0 0 0 6px rgba(36, 37, 31, 0.05);
+}
+
+.license-front {
+  display: flex;
+  flex-direction: column;
+  padding: 6.2% 7%;
+}
+
+.license-back {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8%;
+  text-align: center;
+  transform: rotateY(180deg);
+}
+
+/* Subtle card grain */
+
+.license-face::before {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  content: "";
+  opacity: 0.13;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(65, 62, 48, 0.12) 3.5px,
+    transparent 4px
+  );
+}
+
+.license-face > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================================
+   CARD FRONT
+========================================= */
+
+.card-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 5%;
+  border-bottom: 1px solid rgba(36, 37, 31, 0.2);
+}
+
+.license-emblem {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 36px;
+  aspect-ratio: 1;
+  border: 1.5px solid var(--card-ink);
+  border-radius: 50%;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 23px;
+  font-weight: 700;
+}
+
+.license-heading {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.license-heading > span {
+  font-size: clamp(9px, 1.2vw, 12px);
+  font-weight: 900;
+  letter-spacing: 1.6px;
+}
+
+.license-heading small {
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.card-star {
+  font-size: 24px;
+}
+
+/* Main card information */
+
+.card-main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  gap: 6%;
+  padding-top: 6%;
+  padding-bottom: 4%;
+}
+
+.portrait {
+  position: relative;
+  display: flex;
+  flex: 0 0 32%;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid rgba(36, 37, 31, 0.4);
+  background:
+    radial-gradient(circle at 50% 36%, #c8c6b6 0 15%, transparent 15.5%),
+    linear-gradient(145deg, #b7b5a5, #8e9180);
+}
+
+.portrait::before {
+  position: absolute;
+  bottom: -13%;
+  width: 70%;
+  height: 57%;
+  border-radius: 48% 48% 0 0;
+  background: #505247;
+  content: "";
+}
+
+.portrait-letter {
+  position: absolute;
+  top: 28%;
+  z-index: 1;
+  color: rgba(255, 255, 255, 0.9);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(30px, 4vw, 47px);
+  font-weight: 700;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.portrait-caption {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  padding: 5px 2px;
+  color: #f0ecde;
+  background: rgba(36, 37, 31, 0.72);
+  font-size: 6px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-align: center;
+}
+
+.card-details {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  padding-top: 2px;
+}
+
+.detail-label {
+  color: #66675c;
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 1.7px;
+}
+
+.card-details h3 {
+  overflow: hidden;
+  margin: 5px 0 0;
+  font-family: "Arial Narrow", Arial, sans-serif;
+  font-size: clamp(13px, 1.8vw, 19px);
+  font-weight: 900;
+  letter-spacing: 0.7px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.detail-divider {
+  width: 100%;
+  height: 1px;
+  margin: 10px 0;
+  background: rgba(36, 37, 31, 0.2);
+}
+
+.license-number {
+  overflow: hidden;
+  margin-top: 3px;
+  font-family: "Courier New", monospace;
+  font-size: clamp(21px, 3vw, 31px);
+  font-weight: 700;
+  letter-spacing: 2px;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 7px;
+  border-top: 1px solid rgba(36, 37, 31, 0.2);
+  font-size: 6px;
+  font-weight: 800;
+  letter-spacing: 1.1px;
+}
+
+.card-stripe {
+  position: absolute;
+  top: 0;
+  right: 4.5%;
+  bottom: 0;
+  width: 3px;
+  background: var(--card-ink);
+}
+
+/* =========================================
+   CARD BACK
+========================================= */
+
+.back-emblem {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  aspect-ratio: 1;
+  margin-bottom: 12px;
+  border: 1px solid var(--card-ink);
+  border-radius: 50%;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 27px;
+  font-weight: 700;
+}
+
+.back-title {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.back-rule {
+  width: 52px;
+  height: 2px;
+  margin: 13px auto;
+  background: var(--card-ink);
+}
+
+.license-back p {
+  max-width: 250px;
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.back-number {
+  margin-top: 18px;
+  font-family: "Courier New", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.back-bottom {
+  position: absolute;
+  right: 7%;
+  bottom: 7%;
+  left: 7%;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 8px;
+  border-top: 1px solid rgba(36, 37, 31, 0.2);
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+/* =========================================
+   PREVIEW CONTROLS
+========================================= */
+
+.preview-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 20px;
+  border-top: 1px solid var(--studio-border);
+}
+
+.preview-controls > span {
+  color: var(--studio-muted);
+  font-size: 10px;
+}
+
+.preview-controls button {
+  padding: 9px 13px;
+  border: 1px solid var(--studio-border);
+  border-radius: 3px;
+  color: var(--studio-accent);
+  background: transparent;
+  font-size: 11px;
+  transition:
+    border-color 180ms ease,
+    background 180ms ease;
+}
+
+.preview-controls button:hover {
+  border-color: var(--studio-accent);
+  background: rgba(201, 230, 107, 0.06);
+}
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.studio-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 6%;
+  border-top: 1px solid var(--studio-border);
+  color: #727368;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (min-width: 1400px) {
+  .workspace {
+    padding-top: 75px;
+    padding-bottom: 85px;
+  }
+
+  .card-stage {
+    min-height: 450px;
+  }
+}
+
+@media (max-width: 900px) {
+  .workspace {
+    grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.2fr);
+    gap: 36px;
+    padding-right: 4%;
+    padding-left: 4%;
+  }
+
+  .topbar {
+    padding-right: 4%;
+    padding-left: 4%;
+  }
+
+  .license-emblem {
+    width: 29px;
+    font-size: 19px;
+  }
+
+  .card-top {
+    gap: 7px;
+  }
+
+  .card-stripe {
+    width: 2px;
+  }
+}
+
+@media (max-width: 680px) {
+  .topbar {
+    min-height: 68px;
+    gap: 12px;
+  }
+
+  .brand {
+    gap: 8px;
+  }
+
+  .brand-mark {
+    width: 33px;
+    font-size: 23px;
+  }
+
+  .brand strong {
+    font-size: 11px;
+    letter-spacing: 2px;
+  }
+
+  .brand small {
+    font-size: 8px;
+    letter-spacing: 1.5px;
+  }
+
+  .topbar-label {
+    display: none;
+  }
+
+  .workspace {
+    min-height: auto;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 42px;
+    padding: 38px 22px 45px;
+  }
+
+  .section-heading {
+    margin-bottom: 28px;
+  }
+
+  .section-heading h1 {
+    max-width: 360px;
+    font-size: 38px;
+  }
+
+  .form-section {
+    margin-bottom: 22px;
+  }
+
+  .editor-note {
+    margin-top: 5px;
+  }
+
+  .preview-heading h2 {
+    font-size: 22px;
+  }
+
+  .card-stage {
+    min-height: 300px;
+    margin: 10px 0;
+  }
+
+  .license-card {
+    width: min(100%, 440px);
+  }
+
+  .license-emblem {
+    width: 30px;
+    font-size: 20px;
+  }
+
+  .license-heading > span {
+    font-size: clamp(8px, 2.2vw, 12px);
+  }
+
+  .card-details h3 {
+    font-size: clamp(12px, 3.2vw, 19px);
+  }
+
+  .license-number {
+    font-size: clamp(19px, 5vw, 31px);
+  }
+
+  .portrait-letter {
+    font-size: clamp(28px, 8vw, 45px);
+  }
+
+  .studio-footer {
+    flex-direction: column;
+    gap: 8px;
+    padding: 18px 22px;
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 380px) {
+  .workspace {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+
+  .card-stage {
+    min-height: 245px;
+  }
+
+  .license-front {
+    padding: 5.5% 6%;
+  }
+
+  .card-top {
+    gap: 5px;
+  }
+
+  .license-emblem {
+    width: 25px;
+    font-size: 17px;
+  }
+
+  .license-heading > span {
+    letter-spacing: 1px;
+  }
+
+  .license-heading small {
+    font-size: 6px;
+    letter-spacing: 1px;
+  }
+
+  .card-star {
+    font-size: 17px;
+  }
+
+  .card-footer {
+    font-size: 5px;
+  }
+
+  .detail-label {
+    font-size: 6px;
+    letter-spacing: 1px;
+  }
+
+  .preview-controls {
+    align-items: flex-start;
+  }
+
+  .preview-controls > span {
+    max-width: 180px;
+    line-height: 1.6;
+  }
+}
+
+/* Respect reduced-motion preferences. */
+
+@media (prefers-reduced-motion: reduce) {
+  .license-card {
+    animation: none;
+    transition: none;
+  }
+
+  .studio button,
+  .form-section input {
+    transition: none;
+  }
+}
+
+.field-hint {
+  margin: 10px 0 0;
+  color: var(--studio-muted);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.field-hint--faint {
+  margin-top: 6px;
+  color: #6f7066;
+  font-size: 10px;
+}
+
+.field-reading {
+  color: var(--studio-accent);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.field-warning {
+  color: #e0a26a;
+}
+
+.side-selector--three {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.side-selector--two-two {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.aura-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-height: 48px;
+  padding: 8px 4px;
+}
+
+.aura-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.aura-sub {
+  font-size: 9px;
+  letter-spacing: 0.5px;
+  opacity: 0.7;
+}
+
+/* Active accent colours per aura */
+.aura-option--ten.active {
+  border-color: #c8a83a;
+  color: #d4b84a;
+  background: #1e1c10;
+}
+.aura-option--zetsu.active {
+  border-color: #46483a;
+  color: var(--studio-muted);
+  background: #161614;
+}
+.aura-option--ren.active {
+  border-color: #8b1a1a;
+  color: #d94040;
+  background: #1e1010;
+}
+.aura-option--hatsu.active {
+  border-color: #6a2a9a;
+  color: #b060e0;
+  background: #160e1e;
+}
+
+.volume-slider {
+  width: 80px;
+  height: 4px;
+  cursor: pointer;
+  accent-color: #d7ff4f;
+}
+
+/* Wider customization column */
+.studio-layout {
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+}
+
+/* Four Nen Aura options in one row */
+.aura-selector {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.aura-selector .aura-option {
+  min-width: 0;
+  padding: 12px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.aura-selector .aura-label {
+  font-size: 11px;
+}
+
+.aura-selector .aura-sub {
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+/* Disclaimer and action buttons */
+.editor-note {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.editor-note-top {
+  flex: 1;
+  min-width: 0;
+}
+
+.editor-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.export-button,
+.reset-button {
+  min-height: 38px;
+  padding: 0 18px;
+  border-radius: 3px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.export-button {
+  color: #10110e;
+  background: #d5ff45;
+  border: 1px solid #d5ff45;
+  font-weight: 600;
+}
+
+.export-button:hover {
+  background: #e2ff80;
+  border-color: #e2ff80;
+}
+
+.reset-button {
+  color: #d8d8d0;
+  background: transparent;
+  border: 1px solid #383932;
+}
+
+.reset-button:hover {
+  border-color: #d5ff45;
+  color: #d5ff45;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .studio-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .editor-note {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .editor-actions {
+    width: 100%;
+  }
+
+  .editor-actions button {
+    flex: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .aura-selector {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
