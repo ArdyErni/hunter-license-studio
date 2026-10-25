@@ -65,7 +65,7 @@ function App() {
         <a className="brand" href="#">
           <img
             className="brand-logo"
-            src={"src/images/hxh-logo.png"}
+            src={"public\images\hxh-logo.png"}
             alt="Hunter License Studio"
           />
           <span>
