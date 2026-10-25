@@ -478,3 +478,142 @@
     transform: none !important;
   }
 }
+
+/* =========================================
+   EXPORT-ONLY OVERRIDES
+   .hl-export-scene / .hl-export-face strip all
+   3D, animation, and backface rules so the
+   flat panels render correctly for PNG capture.
+   --hl-cqw is set inline (= 1% of panel width)
+   so cqw-equivalent sizing works inside the
+   html-to-image foreignObject where container
+   queries do not resolve.
+========================================= */
+
+.hl-export-scene {
+  position: relative;
+  top: auto;
+  left: auto;
+  width: 100%;
+  height: 100%;
+  perspective: none;
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+.hl-export-scene::before {
+  display: none;
+}
+
+.hl-export-face {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  height: 100%;
+  transform: none !important;
+  backface-visibility: visible !important;
+  -webkit-backface-visibility: visible !important;
+  transition: none !important;
+  animation: none !important;
+  /* Override every cqw value with var(--hl-cqw) equivalents */
+  padding: calc(3 * var(--hl-cqw, 1px));
+  border-radius: calc(4.5 * var(--hl-cqw, 1px));
+  box-shadow:
+    0 0 0 calc(0.5 * var(--hl-cqw, 1px)) rgba(0, 0, 0, 0.25),
+    0 calc(6 * var(--hl-cqw, 1px)) calc(9 * var(--hl-cqw, 1px)) rgba(0, 0, 0, 0.45);
+}
+
+.hl-export-face::before,
+.hl-export-face::after {
+  display: none;
+}
+
+/* Re-declare every cqw-using rule scoped to .hl-export-face */
+
+.hl-export-face .hl-front-inner {
+  border: calc(0.5 * var(--hl-cqw, 1px)) solid rgba(0, 0, 0, 0.3);
+  border-radius: calc(2.5 * var(--hl-cqw, 1px));
+}
+
+.hl-export-face .hl-top {
+  padding: calc(4 * var(--hl-cqw, 1px));
+}
+
+.hl-export-face .hl-frame {
+  padding: calc(4 * var(--hl-cqw, 1px)) calc(4 * var(--hl-cqw, 1px)) calc(3.5 * var(--hl-cqw, 1px));
+  border-radius: calc(2 * var(--hl-cqw, 1px));
+}
+
+.hl-export-face .hl-logo-box {
+  padding: calc(3 * var(--hl-cqw, 1px));
+}
+
+.hl-export-face .hl-hatch {
+  height: calc(11 * var(--hl-cqw, 1px));
+  margin-top: calc(3.5 * var(--hl-cqw, 1px));
+  border: calc(0.4 * var(--hl-cqw, 1px)) solid #777;
+  background: repeating-linear-gradient(
+    90deg,
+    #f2f2f2 0 calc(1.1 * var(--hl-cqw, 1px)),
+    #8d8d8d calc(1.1 * var(--hl-cqw, 1px)) calc(1.4 * var(--hl-cqw, 1px))
+  );
+}
+
+.hl-export-face .hl-band {
+  padding: calc(4 * var(--hl-cqw, 1px));
+}
+
+.hl-export-face .hl-plate {
+  height: calc(13 * var(--hl-cqw, 1px));
+  padding: calc(1.6 * var(--hl-cqw, 1px)) calc(2.5 * var(--hl-cqw, 1px));
+  border: calc(0.6 * var(--hl-cqw, 1px)) solid var(--hl-ink);
+}
+
+.hl-export-face .hl-lines {
+  gap: calc(1.8 * var(--hl-cqw, 1px));
+}
+
+.hl-export-face .hl-line {
+  height: calc(5.6 * var(--hl-cqw, 1px));
+  padding: calc(0.7 * var(--hl-cqw, 1px)) calc(1.4 * var(--hl-cqw, 1px));
+  border: calc(0.5 * var(--hl-cqw, 1px)) solid var(--hl-ink);
+}
+
+.hl-export-face .hl-number-row {
+  gap: calc(1.5 * var(--hl-cqw, 1px));
+}
+
+.hl-export-face .hl-number-row span {
+  font-size: calc(3 * var(--hl-cqw, 1px));
+  letter-spacing: calc(0.3 * var(--hl-cqw, 1px));
+}
+
+.hl-export-face .hl-number-row strong {
+  max-width: calc(55 * var(--hl-cqw, 1px));
+  font-size: calc(4.6 * var(--hl-cqw, 1px));
+  letter-spacing: calc(0.4 * var(--hl-cqw, 1px));
+}
+
+.hl-export-face .hl-back-inner {
+  border: calc(0.5 * var(--hl-cqw, 1px)) solid rgba(0, 0, 0, 0.3);
+  border-radius: calc(2.5 * var(--hl-cqw, 1px));
+}
+
+.hl-export-face .hl-stripe {
+  right: calc(8 * var(--hl-cqw, 1px));
+  width: calc(11 * var(--hl-cqw, 1px));
+}
+
+.hl-export-face .hl-digits {
+  top: calc(7 * var(--hl-cqw, 1px));
+  left: calc(8 * var(--hl-cqw, 1px));
+  gap: calc(1.5 * var(--hl-cqw, 1px));
+}
+
+.hl-export-face .hl-digit {
+  width: calc(9 * var(--hl-cqw, 1px));
+  height: calc(9 * var(--hl-cqw, 1px));
+  border: calc(0.9 * var(--hl-cqw, 1px)) solid var(--hl-ink);
+  font-size: calc(5.5 * var(--hl-cqw, 1px));
+}

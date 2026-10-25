@@ -1,4 +1,5 @@
 import { useMemo, useRef, useCallback } from "react";
+import React from "react";
 import type { KeyboardEvent, PointerEvent } from "react";
 import "./HunterLicense.css";
 import HunterText from "./HunterText";
@@ -25,9 +26,10 @@ type HunterLicenseProps = {
 const TAP_MAX_MOVE = 10; // moved less than this = a tap
 const SWIPE_MIN_DISTANCE = 40; // moved at least this far sideways = a swipe
 
-// Fixed fine print, written in kana and drawn in Hunter script.
-const LINE_ONE = kanaToTokens("ハンターライセンス"); // "Hunter License"
-const LINE_TWO = kanaToTokens("ライセンスナンバー"); // "License number"
+// ─── Shared inner markup ────────────────────────────────────────────────────
+
+const LINE_ONE = kanaToTokens("ハンターライセンス");
+const LINE_TWO = kanaToTokens("ライセンスナンバー");
 
 /** Fan-drawn approximation of the XX mark with a red diamond. */
 function HunterMark() {
@@ -49,6 +51,77 @@ function HunterMark() {
         </g>
       </g>
     </svg>
+  );
+}
+
+// ─── Export-only flat panels ─────────────────────────────────────────────────
+// These are rendered into an off-screen React root for PNG capture.
+// They reuse the exact same CSS classes as the interactive card but strip
+// all 3D transforms, perspective, animations, and backface-visibility.
+
+type ExportPanelProps = {
+  name: string;
+  licenseNumber: string;
+  theme: CardTheme;
+  side: "front" | "back";
+};
+
+export function LicenseExportPanel({ name, licenseNumber, theme, side }: ExportPanelProps) {
+  const number = licenseNumber.trim();
+  const digits = number ? number.split("") : ["", "", "", ""];
+  const { tokens } = useMemo(() => textToHunter(name), [name]);
+
+  // --hl-cqw = 1% of the 420px panel width = 4.2px.
+  // This replaces container-query cqw units, which do not resolve inside
+  // the SVG foreignObject that html-to-image uses for capture.
+  const cqwPx = 420 * 0.01; // 4.2
+
+  return (
+    <div
+      className={`hl-scene hl-theme-${theme} hl-export-scene`}
+      style={{ "--hl-cqw": `${cqwPx}px` } as React.CSSProperties}
+    >
+      {side === "front" ? (
+        <div className="hl-face hl-front hl-export-face">
+          <div className="hl-front-inner">
+            <div className="hl-top">
+              <div className="hl-frame">
+                <div className="hl-logo-box"><HunterMark /></div>
+                <div className="hl-hatch" />
+              </div>
+            </div>
+            <div className="hl-band">
+              <div className="hl-plate">
+                <HunterText className="hl-glyphs" tokens={tokens} label={name.trim() || "Hunter name"} />
+              </div>
+              <div className="hl-lines">
+                <div className="hl-line">
+                  <HunterText className="hl-glyphs" tokens={LINE_ONE} align="start" label="Hunter License" />
+                </div>
+                <div className="hl-line">
+                  <HunterText className="hl-glyphs" tokens={LINE_TWO} align="start" label="License number" />
+                </div>
+              </div>
+              <div className="hl-number-row">
+                <span>NO.</span>
+                <strong>{number || "000"}</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="hl-face hl-back hl-export-face">
+          <div className="hl-back-inner">
+            <div className="hl-digits">
+              {digits.map((digit, i) => (
+                <span key={i} className="hl-digit">{digit}</span>
+              ))}
+            </div>
+            <div className="hl-stripe" />
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 

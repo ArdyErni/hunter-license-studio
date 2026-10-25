@@ -1,6 +1,9 @@
 import { useState, useRef } from "react";
+import { createRoot } from "react-dom/client";
+import { createElement } from "react";
 import "./App.css";
 import HunterLicense from "./components/HunterLicense";
+import { LicenseExportPanel } from "./components/HunterLicense";
 import type { CardTheme, AuraStyle } from "./components/HunterLicense";
 import { textToHunter } from "./utils/hunterGlyphs";
 import { toPng } from "html-to-image";
@@ -36,26 +39,92 @@ function App() {
   const reading = textToHunter(name);
 
   const handleExport = async () => {
-    const licenseElement = document.querySelector(".hl-scene");
+    const PANEL_W = 420;
+    const PANEL_H = 600;
+    const PAD = 12;
+    const GAP = 16;
+    const TOTAL_W = PAD * 2 + PANEL_W * 2 + GAP;
+    const TOTAL_H = PAD * 2 + PANEL_H;
 
-    if (!(licenseElement instanceof HTMLElement)) {
-      console.error("Could not find the Hunter License element.");
-      return;
-    }
+    // Outer wrapper: position absolute, off-screen but in normal flow so
+    // getBoundingClientRect() returns real dimensions (fixed elements inside
+    // html-to-image's foreignObject lose their viewport anchor).
+    const wrapper = document.createElement("div");
+    Object.assign(wrapper.style, {
+      position: "absolute",
+      top: "0",
+      left: "-9999px",
+      width: `${TOTAL_W}px`,
+      height: `${TOTAL_H}px`,
+      overflow: "hidden",
+      pointerEvents: "none",
+    });
+
+    const host = document.createElement("div");
+    Object.assign(host.style, {
+      width: `${TOTAL_W}px`,
+      height: `${TOTAL_H}px`,
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "stretch",
+      gap: `${GAP}px`,
+      padding: `${PAD}px`,
+      boxSizing: "border-box",
+      background: "#1a1a18",
+    });
+
+    const makeSlot = () => {
+      const slot = document.createElement("div");
+      Object.assign(slot.style, {
+        width: `${PANEL_W}px`,
+        height: `${PANEL_H}px`,
+        flexShrink: "0",
+        position: "relative",
+      });
+      return slot;
+    };
+
+    const frontSlot = makeSlot();
+    const backSlot = makeSlot();
+    host.appendChild(frontSlot);
+    host.appendChild(backSlot);
+    wrapper.appendChild(host);
+    document.body.appendChild(wrapper);
+
+    const frontRoot = createRoot(frontSlot);
+    const backRoot = createRoot(backSlot);
 
     try {
-      const dataUrl = await toPng(licenseElement, {
+      frontRoot.render(
+        createElement(LicenseExportPanel, { name, licenseNumber, theme, side: "front" }),
+      );
+      backRoot.render(
+        createElement(LicenseExportPanel, { name, licenseNumber, theme, side: "back" }),
+      );
+
+      // Two rAFs: first lets React flush the render, second lets the browser paint.
+      await new Promise<void>((res) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => res())),
+      );
+
+      const dataUrl = await toPng(host, {
         pixelRatio: 3,
         cacheBust: true,
+        width: TOTAL_W,
+        height: TOTAL_H,
       });
 
       const link = document.createElement("a");
-      link.download = `hunter-license-${licenseNumber}.png`;
+      link.download = `hunter-license-${licenseNumber || "000"}.png`;
       link.href = dataUrl;
       link.click();
-    } catch (error) {
-      console.error("Failed to export Hunter License:", error);
-      alert("Failed to export the license. Please try again.");
+    } catch (err) {
+      console.error("Export failed:", err);
+      alert("Export failed. Check the console for details.");
+    } finally {
+      frontRoot.unmount();
+      backRoot.unmount();
+      wrapper.remove();
     }
   };
 
