@@ -13,7 +13,7 @@ const THEMES: { id: CardTheme; label: string }[] = [
 
 function App() {
   const [name, setName] = useState("GON FREECSS");
-  const [licenseNumber, setLicenseNumber] = useState("405");
+  const [licenseNumber, setLicenseNumber] = useState("109824803287");
   const [showBack, setShowBack] = useState(false);
   const [turns, setTurns] = useState(0); // quarter turns; 0 = upright
   const [theme, setTheme] = useState<CardTheme>("green");
@@ -307,8 +307,8 @@ function App() {
                 type="button"
                 className="reset-button"
                 onClick={() => {
-                  setName("JULIE FREAKS");
-                  setLicenseNumber("0717");
+                  setName("GON FREECSS");
+                  setLicenseNumber("109824803287");
                   setShowBack(false);
                   setTurns(0);
                   setTheme("blue");
