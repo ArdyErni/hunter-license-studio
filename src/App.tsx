@@ -62,7 +62,6 @@ function App() {
   return (
     <main className="studio">
       <header className="topbar">
-        ```tsx
         <a className="brand" href="#">
           <img
             className="brand-logo"
@@ -74,7 +73,6 @@ function App() {
             <small>LICENSE STUDIO</small>
           </span>
         </a>
-        ```
         <span className="topbar-label"></span>
         <div className="topbar-actions">
           {/* Buy Me A Coffee */}
