@@ -7,7 +7,8 @@
  *
  *   blue  -> BlueFront / BlueBack       (Basic Hunter License, matches the reference)
  *   red   -> RedFront / RedBack         (yellow frame, white triangle with XX)
- *   other -> ClassicFront / ClassicBack (green, until it gets its own design)
+ *   green -> GreenFront / GreenBack     (green logo panel, crimson back with dark stripe)
+ *   other -> ClassicFront / ClassicBack (fallback for any theme without its own design)
  *
  * To add a layout for another theme, write its two components and add a
  * line to LicenseFront / LicenseBack at the bottom of this file.
@@ -16,6 +17,7 @@
 import { useMemo } from "react";
 import "./BlueLicense.css";
 import "./RedLicense.css";
+import "./GreenLicense.css";
 import HunterText from "./HunterText";
 import { kanaToTokens, textToHunter } from "../utils/hunterGlyphs";
 
@@ -315,11 +317,99 @@ function RedBack({ name, licenseNumber }: FaceProps) {
 }
 
 /* -------------------------------------------------------------------------- */
+/* Green: green logo panel, crimson back with a dark stripe                   */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Decorative fine print, written in kana and drawn in Hunter script.
+ * The reference's real text is unreadable, so these are our own plain lines,
+ * roughly matching the reference's line lengths (short to long):
+ *   1. Hunter License number
+ *   2. This card is proof of being a Hunter
+ *   3. The Hunter License is an important proof
+ *   4. Keep the license safe; it is a Hunter's important proof
+ * Edit freely; any kana that exists in the chart works (no small っ/ゃゅょ).
+ */
+const GREEN_FINE_PRINT = [
+  "ハンターライセンス ナンバー",
+  "コノカードハ ハンターノ アカシデス",
+  "ハンターライセンスハ ダイジナ アカシデス",
+  "ライセンスハ ホカンスルコト ハンターノ ダイジナ アカシ",
+].map(kanaToTokens);
+
+function GreenFront({ name }: FaceProps) {
+  const { tokens } = useMemo(() => textToHunter(name), [name]);
+
+  return (
+    <div className="hl-gn-front">
+      {/* Green panel: big XX mark in a thick black frame */}
+      <div className="hl-gn-top">
+        <div className="hl-gn-logo">
+          <HunterMark />
+        </div>
+      </div>
+
+      {/* Pale-green band: name plate + fine print */}
+      <div className="hl-gn-info">
+        <div className="hl-gn-plate">
+          <HunterText
+            className="hl-glyphs"
+            tokens={tokens}
+            label={name.trim() || "Hunter name"}
+          />
+        </div>
+
+        <div className="hl-gn-lines">
+          {GREEN_FINE_PRINT.map((lineTokens, index) => (
+            <div className="hl-gn-line" key={index}>
+              <HunterText
+                className="hl-glyphs"
+                tokens={lineTokens}
+                align="start"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Crimson panel with a dark stripe that runs the full height of the card, a round
+ * logo and two short rules at the top left, and a long rule near the bottom.
+ * The reference shows no number, so ours sits just above the long rule.
+ */
+function GreenBack({ licenseNumber }: FaceProps) {
+  const number = licenseNumber.trim();
+
+  return (
+    <div className="hl-gn-back">
+      <div className="hl-gn-badge">
+        <HunterMark />
+      </div>
+      <div className="hl-gn-rule hl-gn-rule-a" />
+      <div className="hl-gn-rule hl-gn-rule-b" />
+
+      <div className="hl-gn-number">
+        <span>NO.</span>
+        <strong>{number || "000"}</strong>
+      </div>
+      <div className="hl-gn-rule hl-gn-rule-c" />
+
+      <div className="hl-gn-stripe" />
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
 /* Pick the layout for a theme                                                */
 /* -------------------------------------------------------------------------- */
 
 export function LicenseFront(props: FaceProps) {
   switch (props.theme) {
+    case "green":
+      return <GreenFront {...props} />;
     case "blue":
       return <BlueFront {...props} />;
     case "red":
@@ -331,6 +421,8 @@ export function LicenseFront(props: FaceProps) {
 
 export function LicenseBack(props: FaceProps) {
   switch (props.theme) {
+    case "green":
+      return <GreenBack {...props} />;
     case "blue":
       return <BlueBack {...props} />;
     case "red":
