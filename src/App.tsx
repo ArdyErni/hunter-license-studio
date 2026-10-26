@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { createElement } from "react";
 import "./App.css";
@@ -21,8 +21,7 @@ function App() {
   const [turns, setTurns] = useState(0); // quarter turns; 0 = upright
   const [theme, setTheme] = useState<CardTheme>("green");
   const [aura, setAura] = useState<AuraStyle>("ten");
-  const [musicOn, setMusicOn] = useState(false);
-  const [volume, setVolume] = useState(0.25);
+  const [musicOn, setMusicOn] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const toggleMusic = () => {
@@ -161,6 +160,16 @@ function App() {
       wrapper.remove();
     }
   };
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.volume = 0.15;
+
+    audio.play().catch((error) => {
+      console.log("Autoplay prevented by browser:", error);
+    });
+  }, []);
 
   return (
     <main className="studio">
@@ -199,7 +208,6 @@ function App() {
             </svg>
           </a>
 
-          {/* My Github Link */}
           {/* My GitHub Link */}
           <a
             className="icon-btn tooltip-trigger"
@@ -289,7 +297,7 @@ function App() {
               </svg>
             )}
           </button>
-          <input
+          {/* <input
             className="volume-slider"
             type="range"
             min="0"
@@ -305,7 +313,7 @@ function App() {
               }
             }}
             aria-label="Music volume"
-          />
+          /> */}
         </div>
       </header>
 
