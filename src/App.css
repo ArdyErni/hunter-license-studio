@@ -1161,3 +1161,67 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* Divider between personal links and external audio credits */
+.topbar-divider {
+  display: inline-block;
+  width: 1px;
+  height: 22px;
+  flex-shrink: 0;
+  margin: 0 4px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* Tooltip anchor */
+.tooltip-trigger {
+  position: relative;
+}
+
+/* Tooltip bubble */
+.tooltip-trigger::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translate(-50%, -4px);
+
+  width: max-content;
+  max-width: min(260px, 80vw);
+  padding: 8px 11px;
+
+  background: #20201e;
+  color: #f2f2e8;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  white-space: normal;
+
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 1000;
+
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease,
+    visibility 160ms ease;
+}
+
+/* Show tooltip on mouse hover and keyboard focus */
+.tooltip-trigger:hover::after,
+.tooltip-trigger:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .tooltip-trigger::after {
+    transition: none;
+  }
+}

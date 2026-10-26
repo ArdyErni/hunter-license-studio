@@ -39,6 +39,9 @@ function App() {
   const reading = textToHunter(name);
 
   const handleExport = async () => {
+    // Card dimensions: portrait ratio 0.7 wide × 1.0 tall.
+    // Each panel is 420 × 600px; the wrapper adds 12px padding and 16px gap.
+    console.log("EXPORT BUTTON CLICKED");
     const PANEL_W = 420;
     const PANEL_H = 600;
     const PAD = 12;
@@ -46,22 +49,13 @@ function App() {
     const TOTAL_W = PAD * 2 + PANEL_W * 2 + GAP;
     const TOTAL_H = PAD * 2 + PANEL_H;
 
-    // Outer wrapper: position absolute, off-screen but in normal flow so
-    // getBoundingClientRect() returns real dimensions (fixed elements inside
-    // html-to-image's foreignObject lose their viewport anchor).
-    const wrapper = document.createElement("div");
-    Object.assign(wrapper.style, {
-      position: "absolute",
-      top: "0",
-      left: "-9999px",
-      width: `${TOTAL_W}px`,
-      height: `${TOTAL_H}px`,
-      overflow: "hidden",
-      pointerEvents: "none",
-    });
-
     const host = document.createElement("div");
     Object.assign(host.style, {
+      position: "fixed",
+      top: "0",
+      left: "0",
+      opacity: "0",
+      pointerEvents: "none",
       width: `${TOTAL_W}px`,
       height: `${TOTAL_H}px`,
       display: "flex",
@@ -71,8 +65,10 @@ function App() {
       padding: `${PAD}px`,
       boxSizing: "border-box",
       background: "#1a1a18",
+      zIndex: "0",
     });
 
+    // Each panel wrapper gives cqw a concrete inline size to resolve against.
     const makeSlot = () => {
       const slot = document.createElement("div");
       Object.assign(slot.style, {
@@ -80,6 +76,7 @@ function App() {
         height: `${PANEL_H}px`,
         flexShrink: "0",
         position: "relative",
+        containerType: "inline-size",
       });
       return slot;
     };
@@ -88,21 +85,48 @@ function App() {
     const backSlot = makeSlot();
     host.appendChild(frontSlot);
     host.appendChild(backSlot);
-    wrapper.appendChild(host);
-    document.body.appendChild(wrapper);
+    document.body.appendChild(host);
+    console.log("Export host:", host);
+    console.log("Export host dimensions:", host.getBoundingClientRect());
+    console.log("Export host HTML:", host.outerHTML);
 
     const frontRoot = createRoot(frontSlot);
     const backRoot = createRoot(backSlot);
 
     try {
       frontRoot.render(
-        createElement(LicenseExportPanel, { name, licenseNumber, theme, side: "front" }),
+        createElement(LicenseExportPanel, {
+          name,
+          licenseNumber,
+          theme,
+          side: "front",
+        }),
       );
       backRoot.render(
-        createElement(LicenseExportPanel, { name, licenseNumber, theme, side: "back" }),
+        createElement(LicenseExportPanel, {
+          name,
+          licenseNumber,
+          theme,
+          side: "back",
+        }),
       );
 
-      // Two rAFs: first lets React flush the render, second lets the browser paint.
+      // Wait for React to render both panels.
+      await new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      );
+
+      // Wait for React to render both panels.
+      await new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      );
+
+      console.log("Front slot HTML:", frontSlot.innerHTML);
+      console.log("Back slot HTML:", backSlot.innerHTML);
+      console.log("Front slot dimensions:", frontSlot.getBoundingClientRect());
+      console.log("Back slot dimensions:", backSlot.getBoundingClientRect());
+
+      // Two rAFs: first lets React flush, second lets the browser paint.
       await new Promise<void>((res) =>
         requestAnimationFrame(() => requestAnimationFrame(() => res())),
       );
@@ -124,7 +148,7 @@ function App() {
     } finally {
       frontRoot.unmount();
       backRoot.unmount();
-      wrapper.remove();
+      host.remove();
     }
   };
 
@@ -145,13 +169,14 @@ function App() {
         <span className="topbar-label"></span>
         <div className="topbar-actions">
           {/* Buy Me A Coffee */}
+          {/* Buy Me A Coffee */}
           <a
-            className="icon-btn"
+            className="icon-btn tooltip-trigger"
             href="https://buymeacoffee.com/ardyerni"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Buy me a coffee"
-            title="Buy me a coffee"
+            aria-label="Support my work on Buy Me a Coffee"
+            data-tooltip="Enjoying my project? Buy me a coffee :)"
           >
             <svg
               viewBox="0 0 24 24"
@@ -165,12 +190,14 @@ function App() {
           </a>
 
           {/* My Github Link */}
+          {/* My GitHub Link */}
           <a
-            className="icon-btn"
+            className="icon-btn tooltip-trigger"
             href="https://github.com/ArdyErni"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Visit my GitHub profile"
+            data-tooltip="Explore my projects and code on GitHub."
           >
             <svg
               width="18"
@@ -186,13 +213,18 @@ function App() {
               />
             </svg>
           </a>
-          {/* Youtube Link of 8bit OP */}
+
+          {/* Divider between personal links and audio credits */}
+          <span className="topbar-divider" aria-hidden="true" />
+
+          {/* YouTube Link — @StudioMegaane's 8-bit Cover */}
           <a
-            className="icon-btn"
+            className="icon-btn tooltip-trigger"
             href="https://www.youtube.com/watch?v=hqXYKpO-65M&list=RDhqXYKpO-65M&start_radio=1"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Visit my YouTube channel"
+            aria-label="Watch @StudioMegaane's 8-bit cover on YouTube"
+            data-tooltip="Watch the original 8-bit cover by @StudioMegaane on YouTube."
           >
             <svg
               width="18"
@@ -205,9 +237,10 @@ function App() {
             </svg>
           </a>
           <button
-            className="icon-btn"
+            className="icon-btn tooltip-trigger"
             aria-label="Toggle background music"
             aria-pressed={musicOn}
+            data-tooltip="Background music: @StudioMegaane's 8-bit cover."
             onClick={toggleMusic}
           >
             {musicOn ? (
