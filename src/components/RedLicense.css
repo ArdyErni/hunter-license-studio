@@ -42,19 +42,13 @@
   fill: #fff;
 }
 
-.hl-rd-yellow {
-  fill: #f2d51b;
-}
-
-.hl-rd-stem {
-  fill: none;
-  stroke: #f2d51b;
-  stroke-width: 0.5;
-}
-
+.hl-rd-yellow,
+.hl-rd-stem,
 .hl-rd-bar {
-  stroke: #f2d51b;
-  stroke-width: 0.7;
+  fill: #f2d51b;
+  stroke: #111;
+  stroke-width: 0.4;
+  stroke-linejoin: miter;
 }
 
 .hl-rd-x line {

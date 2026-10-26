@@ -245,25 +245,17 @@ function BlueBack({ licenseNumber }: FaceProps) {
  */
 function RedX({ x }: { x: number }) {
   return (
-    <g
-      className="hl-rd-x"
-      transform={`translate(${x} 14.5)`}
-      stroke="#111"
-      strokeLinecap="butt"
-    >
-      <line x1="6" y1="3" x2="28" y2="47" strokeWidth="6.5" />
-      <line x1="28" y1="3" x2="6" y2="47" strokeWidth="1.4" />
-      <g strokeWidth="2">
-        <line x1="0" y1="2" x2="12" y2="2" />
-        <line x1="22" y1="2" x2="34" y2="2" />
-        <line x1="0" y1="48" x2="12" y2="48" />
-        <line x1="22" y1="48" x2="34" y2="48" />
-      </g>
-      <g strokeWidth="1.2">
-        <line x1="0.6" y1="2" x2="0.6" y2="4.6" />
-        <line x1="33.4" y1="2" x2="33.4" y2="4.6" />
-        <line x1="0.6" y1="45.4" x2="0.6" y2="48" />
-        <line x1="33.4" y1="45.4" x2="33.4" y2="48" />
+    <g className="hl-rd-x" transform={`translate(${x} 14.5)`}>
+      {/* "\" top-left to bottom-right */}
+      <polygon points="3.25,2 6.75,2 30.75,48 27.25,48" fill="#111" />
+      {/* "/" top-right to bottom-left, same width */}
+      <polygon points="27.25,2 30.75,2 6.75,48 3.25,48" fill="#111" />
+      {/* serifs, centered on each stroke end */}
+      <g strokeWidth="2.4">
+        <line x1="0" y1="2" x2="10" y2="2" />
+        <line x1="24" y1="2" x2="34" y2="2" />
+        <line x1="0" y1="48" x2="10" y2="48" />
+        <line x1="24" y1="48" x2="34" y2="48" />
       </g>
     </g>
   );
@@ -294,40 +286,30 @@ function RedFront({ name }: FaceProps) {
         />
 
         {/* Goblet on top, stem running down to the crossbar */}
+        {/* Goblet: tip now overlaps the triangle's top edge */}
         <polygon
           className="hl-rd-yellow"
-          points="33,4 61,4 47,12"
+          points="33,4 61,4 47,13.5"
           fill="#f2d51b"
         />
+        {/* Stem, drawn first so the other pieces overlap its ends */}
         <rect
           className="hl-rd-stem"
-          x="45.8"
-          y="12"
-          width="2.4"
-          height="67.5"
-          fill="none"
-          stroke="#f2d51b"
+          x="45.6"
+          y="13"
+          width="2.8"
+          height="66.5"
         />
 
-        {/* Crossbar with a pennant on each side */}
-        <line
-          className="hl-rd-bar"
-          x1="14"
-          y1="79.5"
-          x2="80"
-          y2="79.5"
-          stroke="#f2d51b"
-        />
-        <polygon
-          className="hl-rd-yellow"
-          points="5,67 5,92 15,79.5"
-          fill="#f2d51b"
-        />
-        <polygon
-          className="hl-rd-yellow"
-          points="89,67 89,92 79,79.5"
-          fill="#f2d51b"
-        />
+        {/* Crossbar (now a thin rect so it can have an outline) */}
+        <rect className="hl-rd-bar" x="14" y="78.9" width="66" height="1.2" />
+
+        {/* Pennants on each side */}
+        <polygon className="hl-rd-yellow" points="5,67 5,92 15,79.5" />
+        <polygon className="hl-rd-yellow" points="89,67 89,92 79,79.5" />
+
+        {/* Goblet on top, tip overlapping the triangle's top edge */}
+        <polygon className="hl-rd-yellow" points="33,4 61,4 47,13.5" />
 
         <RedX x={10} />
         <RedX x={50} />
