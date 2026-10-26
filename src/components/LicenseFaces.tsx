@@ -224,7 +224,12 @@ function BlueBack({ licenseNumber }: FaceProps) {
  */
 function RedX({ x }: { x: number }) {
   return (
-    <g className="hl-rd-x" transform={`translate(${x} 14.5)`}>
+    <g
+      className="hl-rd-x"
+      transform={`translate(${x} 14.5)`}
+      stroke="#111"
+      strokeLinecap="butt"
+    >
       <line x1="6" y1="3" x2="28" y2="47" strokeWidth="6.5" />
       <line x1="28" y1="3" x2="6" y2="47" strokeWidth="1.4" />
       <g strokeWidth="2">
@@ -261,22 +266,47 @@ function RedFront({ name }: FaceProps) {
         aria-label={label ? `Hunter license of ${label}` : "Hunter license"}
       >
         {/* White triangle pointing down */}
-        <polygon className="hl-rd-triangle" points="4,13 90,13 47,133" />
+        <polygon
+          className="hl-rd-triangle"
+          points="4,13 90,13 47,133"
+          fill="#fff"
+        />
 
         {/* Goblet on top, stem running down to the crossbar */}
-        <polygon className="hl-rd-yellow" points="33,4 61,4 47,12" />
+        <polygon
+          className="hl-rd-yellow"
+          points="33,4 61,4 47,12"
+          fill="#f2d51b"
+        />
         <rect
           className="hl-rd-stem"
           x="45.8"
           y="12"
           width="2.4"
           height="67.5"
+          fill="none"
+          stroke="#f2d51b"
         />
 
         {/* Crossbar with a pennant on each side */}
-        <line className="hl-rd-bar" x1="14" y1="79.5" x2="80" y2="79.5" />
-        <polygon className="hl-rd-yellow" points="5,67 5,92 15,79.5" />
-        <polygon className="hl-rd-yellow" points="89,67 89,92 79,79.5" />
+        <line
+          className="hl-rd-bar"
+          x1="14"
+          y1="79.5"
+          x2="80"
+          y2="79.5"
+          stroke="#f2d51b"
+        />
+        <polygon
+          className="hl-rd-yellow"
+          points="5,67 5,92 15,79.5"
+          fill="#f2d51b"
+        />
+        <polygon
+          className="hl-rd-yellow"
+          points="89,67 89,92 79,79.5"
+          fill="#f2d51b"
+        />
 
         <RedX x={10} />
         <RedX x={50} />

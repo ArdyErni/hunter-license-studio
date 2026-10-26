@@ -49,12 +49,21 @@ function App() {
     const TOTAL_W = PAD * 2 + PANEL_W * 2 + GAP;
     const TOTAL_H = PAD * 2 + PANEL_H;
 
+    // Keep the capture host paintable at its own origin. Moving it offscreen
+    // as a child preserves its layout while avoiding a transparent capture.
+    const wrapper = document.createElement("div");
+    Object.assign(wrapper.style, {
+      position: "absolute",
+      top: "0",
+      left: "-9999px",
+      width: `${TOTAL_W}px`,
+      height: `${TOTAL_H}px`,
+      overflow: "hidden",
+      pointerEvents: "none",
+    });
+
     const host = document.createElement("div");
     Object.assign(host.style, {
-      position: "fixed",
-      top: "0",
-      left: "0",
-      opacity: "0",
       pointerEvents: "none",
       width: `${TOTAL_W}px`,
       height: `${TOTAL_H}px`,
@@ -85,7 +94,8 @@ function App() {
     const backSlot = makeSlot();
     host.appendChild(frontSlot);
     host.appendChild(backSlot);
-    document.body.appendChild(host);
+    wrapper.appendChild(host);
+    document.body.appendChild(wrapper);
     console.log("Export host:", host);
     console.log("Export host dimensions:", host.getBoundingClientRect());
     console.log("Export host HTML:", host.outerHTML);
@@ -139,7 +149,7 @@ function App() {
       });
 
       const link = document.createElement("a");
-      link.download = `hunter-license-${licenseNumber || "000"}.png`;
+      link.download = `HLS_${name}_${licenseNumber}.png`;
       link.href = dataUrl;
       link.click();
     } catch (err) {
@@ -148,7 +158,7 @@ function App() {
     } finally {
       frontRoot.unmount();
       backRoot.unmount();
-      host.remove();
+      wrapper.remove();
     }
   };
 

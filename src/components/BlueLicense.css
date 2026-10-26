@@ -133,13 +133,13 @@
 
 /* Plain bold text. vertical-rl lays it out top to bottom; the 180deg turn makes
    it read bottom to top (counter-clockwise), like the reference. */
+
 .hl-bl-number {
   color: var(--hl-ink);
-  font-family: "Arial Narrow", "Roboto Condensed", Arial, sans-serif;
-  font-size: calc(8.2 * var(--u));
-  font-variant-numeric: tabular-nums;
+  font-family: "Courier New", monospace;
+  font-size: calc(4.4 * var(--u));
   font-weight: 700;
-  letter-spacing: 0;
+  letter-spacing: calc(0.9 * var(--u));
   line-height: 1;
   white-space: nowrap;
   writing-mode: vertical-rl;
