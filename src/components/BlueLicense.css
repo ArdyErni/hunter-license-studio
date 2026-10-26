@@ -1,0 +1,147 @@
+/* =========================================
+   BLUE: BASIC HUNTER LICENSE
+   Layout measured from the reference cards.
+
+   Sizes are written as  calc(N * var(--u))  where 1 u = 1% of the card width.
+   --u is 1cqw on the live card and a fixed pixel size in the PNG export
+   (see HunterLicense.css), so this file works in both without a duplicate
+   set of export rules.
+
+   Note: nothing here uses position: relative on purpose. That keeps the
+   holographic ::before/::after layers (on .hl-face) painting above it.
+========================================= */
+
+/* Thicker off-white edge, like the reference. */
+.hl-theme-blue .hl-face {
+  padding: calc(5.6 * var(--u));
+}
+
+/* ---------- FRONT ---------- */
+
+.hl-bl-inner {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  height: 100%;
+  overflow: hidden;
+  border: calc(0.45 * var(--u)) solid rgba(40, 40, 40, 0.45);
+  border-radius: calc(3 * var(--u));
+  background: #bddcf5;
+}
+
+/* Black panel holding the logo and the hatched strip. */
+.hl-bl-panel {
+  display: flex;
+  flex: 0 0 calc(80.4 * var(--u));
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  padding-top: calc(7.5 * var(--u));
+  background: #161616;
+}
+
+.hl-bl-logo {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: calc(64 * var(--u));
+  height: calc(43.5 * var(--u));
+  padding: calc(2.4 * var(--u)) calc(3 * var(--u));
+  background: #fafafa;
+}
+
+/* White strip whose vertical hatching only shows at the two ends. */
+.hl-bl-hatch {
+  width: calc(83 * var(--u));
+  height: calc(17.5 * var(--u));
+  margin-top: calc(8.5 * var(--u));
+  background:
+    linear-gradient(
+      90deg,
+      rgba(244, 244, 244, 0) 0%,
+      #f4f4f4 24%,
+      #f4f4f4 76%,
+      rgba(244, 244, 244, 0) 100%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      #4d4d4d 0 calc(0.4 * var(--u)),
+      #f4f4f4 calc(0.4 * var(--u)) calc(1.2 * var(--u))
+    );
+}
+
+/* Soft blue -> near-white -> blue gradient area. */
+.hl-bl-info {
+  flex: 1;
+  box-sizing: border-box;
+  min-height: 0;
+  padding: calc(3.3 * var(--u)) calc(3.4 * var(--u)) 0 calc(2.8 * var(--u));
+  background: linear-gradient(180deg, #b6daf6 0%, #e6f3fd 45%, #bcdef8 100%);
+}
+
+.hl-bl-plate {
+  box-sizing: border-box;
+  height: calc(12 * var(--u));
+  padding: calc(1.6 * var(--u)) calc(2.5 * var(--u));
+  border: calc(0.45 * var(--u)) solid var(--hl-ink);
+  background: #fff;
+  color: var(--hl-ink);
+}
+
+.hl-bl-lines {
+  display: grid;
+  gap: calc(4.7 * var(--u));
+  margin-top: calc(4.4 * var(--u));
+  padding-left: calc(0.4 * var(--u));
+}
+
+.hl-bl-line {
+  height: calc(3.6 * var(--u));
+  color: var(--hl-ink);
+}
+
+/* ---------- BACK ---------- */
+
+.hl-bl-back-inner {
+  display: flex;
+  box-sizing: border-box;
+  height: 100%;
+  overflow: hidden;
+  border: calc(0.45 * var(--u)) solid rgba(40, 40, 40, 0.45);
+  border-radius: calc(3 * var(--u));
+  background: #a1ccec; /* sampled from the reference back */
+}
+
+/* Full-height black stripe, close to the left edge. */
+.hl-bl-stripe {
+  flex: 0 0 calc(19 * var(--u));
+  align-self: stretch;
+  margin-left: calc(7.3 * var(--u));
+  background: #0d0d0d;
+}
+
+/* The number sits in a fixed-height slot, anchored to the bottom, so the first
+   digit always starts at the same spot and longer numbers grow upward. */
+.hl-bl-number-slot {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-self: flex-start;
+  height: calc(54.7 * var(--u));
+  margin: calc(4.3 * var(--u)) calc(3.4 * var(--u)) 0 auto;
+}
+
+/* Plain bold text. vertical-rl lays it out top to bottom; the 180deg turn makes
+   it read bottom to top (counter-clockwise), like the reference. */
+.hl-bl-number {
+  color: var(--hl-ink);
+  font-family: "Arial Narrow", "Roboto Condensed", Arial, sans-serif;
+  font-size: calc(8.2 * var(--u));
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}

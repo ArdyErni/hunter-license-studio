@@ -1,11 +1,11 @@
-import { useMemo, useRef, useCallback } from "react";
-import React from "react";
-import type { KeyboardEvent, PointerEvent } from "react";
+import { useRef, useCallback } from "react";
+import type { CSSProperties, KeyboardEvent, PointerEvent } from "react";
 import "./HunterLicense.css";
-import HunterText from "./HunterText";
-import { kanaToTokens, textToHunter } from "../utils/hunterGlyphs";
+import { LicenseFront, LicenseBack } from "./LicenseFaces";
+import type { CardTheme } from "./LicenseFaces";
 
-export type CardTheme = "green" | "blue" | "red";
+// App.tsx imports this type from here, so keep exporting it.
+export type { CardTheme };
 export type AuraStyle = "ten" | "zetsu" | "ren" | "hatsu";
 
 type HunterLicenseProps = {
@@ -26,38 +26,10 @@ type HunterLicenseProps = {
 const TAP_MAX_MOVE = 10; // moved less than this = a tap
 const SWIPE_MIN_DISTANCE = 40; // moved at least this far sideways = a swipe
 
-// ─── Shared inner markup ────────────────────────────────────────────────────
-
-const LINE_ONE = kanaToTokens("ハンターライセンス");
-const LINE_TWO = kanaToTokens("ライセンスナンバー");
-
-/** Fan-drawn approximation of the XX mark with a red diamond. */
-function HunterMark() {
-  return (
-    <svg viewBox="0 0 200 120" className="hl-mark" aria-hidden="true">
-      <polygon points="100,14 134,60 100,106 66,60" fill="#c8102e" />
-      <g stroke="#111" fill="none">
-        <line x1="96" y1="14" x2="30" y2="106" strokeWidth="11" />
-        <line x1="104" y1="14" x2="170" y2="106" strokeWidth="11" />
-        <line x1="30" y1="14" x2="96" y2="106" strokeWidth="3" />
-        <line x1="170" y1="14" x2="104" y2="106" strokeWidth="3" />
-        <g strokeWidth="3.5">
-          <line x1="14" y1="14" x2="46" y2="14" />
-          <line x1="82" y1="14" x2="118" y2="14" />
-          <line x1="154" y1="14" x2="186" y2="14" />
-          <line x1="12" y1="106" x2="48" y2="106" />
-          <line x1="84" y1="106" x2="116" y2="106" />
-          <line x1="152" y1="106" x2="188" y2="106" />
-        </g>
-      </g>
-    </svg>
-  );
-}
-
 // ─── Export-only flat panels ─────────────────────────────────────────────────
-// These are rendered into an off-screen React root for PNG capture.
-// They reuse the exact same CSS classes as the interactive card but strip
-// all 3D transforms, perspective, animations, and backface-visibility.
+// Rendered into an off-screen React root for PNG capture. They use the SAME
+// face components as the interactive card (LicenseFront / LicenseBack), but
+// with no 3D transforms, perspective, animation or backface-visibility.
 
 type ExportPanelProps = {
   name: string;
@@ -66,11 +38,12 @@ type ExportPanelProps = {
   side: "front" | "back";
 };
 
-export function LicenseExportPanel({ name, licenseNumber, theme, side }: ExportPanelProps) {
-  const number = licenseNumber.trim();
-  const digits = number ? number.split("") : ["", "", "", ""];
-  const { tokens } = useMemo(() => textToHunter(name), [name]);
-
+export function LicenseExportPanel({
+  name,
+  licenseNumber,
+  theme,
+  side,
+}: ExportPanelProps) {
   // --hl-cqw = 1% of the 420px panel width = 4.2px.
   // This replaces container-query cqw units, which do not resolve inside
   // the SVG foreignObject that html-to-image uses for capture.
@@ -79,48 +52,27 @@ export function LicenseExportPanel({ name, licenseNumber, theme, side }: ExportP
   return (
     <div
       className={`hl-scene hl-theme-${theme} hl-export-scene`}
-      style={{ "--hl-cqw": `${cqwPx}px` } as React.CSSProperties}
+      style={{ "--hl-cqw": `${cqwPx}px` } as CSSProperties}
     >
-      {side === "front" ? (
-        <div className="hl-face hl-front hl-export-face">
-          <div className="hl-front-inner">
-            <div className="hl-top">
-              <div className="hl-frame">
-                <div className="hl-logo-box"><HunterMark /></div>
-                <div className="hl-hatch" />
-              </div>
-            </div>
-            <div className="hl-band">
-              <div className="hl-plate">
-                <HunterText className="hl-glyphs" tokens={tokens} label={name.trim() || "Hunter name"} />
-              </div>
-              <div className="hl-lines">
-                <div className="hl-line">
-                  <HunterText className="hl-glyphs" tokens={LINE_ONE} align="start" label="Hunter License" />
-                </div>
-                <div className="hl-line">
-                  <HunterText className="hl-glyphs" tokens={LINE_TWO} align="start" label="License number" />
-                </div>
-              </div>
-              <div className="hl-number-row">
-                <span>NO.</span>
-                <strong>{number || "000"}</strong>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="hl-face hl-back hl-export-face">
-          <div className="hl-back-inner">
-            <div className="hl-digits">
-              {digits.map((digit, i) => (
-                <span key={i} className="hl-digit">{digit}</span>
-              ))}
-            </div>
-            <div className="hl-stripe" />
-          </div>
-        </div>
-      )}
+      <div
+        className={`hl-face ${
+          side === "front" ? "hl-front" : "hl-back"
+        } hl-export-face`}
+      >
+        {side === "front" ? (
+          <LicenseFront
+            name={name}
+            licenseNumber={licenseNumber}
+            theme={theme}
+          />
+        ) : (
+          <LicenseBack
+            name={name}
+            licenseNumber={licenseNumber}
+            theme={theme}
+          />
+        )}
+      </div>
     </div>
   );
 }
@@ -135,10 +87,6 @@ function HunterLicense({
   onFlip,
   onRotate,
 }: HunterLicenseProps) {
-  const number = licenseNumber.trim();
-  const digits = number ? number.split("") : ["", "", "", ""];
-  const { tokens } = useMemo(() => textToHunter(name), [name]);
-
   // --- gestures: tap = flip, horizontal swipe/drag = rotate ---
   const pointerStart = useRef<{ x: number; y: number } | null>(null);
 
@@ -170,7 +118,7 @@ function HunterLicense({
       scene.style.setProperty("--hx", `${hx}`);
       scene.style.setProperty("--hy", `${hy}`);
     },
-    [reducedMotion]
+    [reducedMotion],
   );
 
   const handlePointerLeave = useCallback(() => {
@@ -243,66 +191,20 @@ function HunterLicense({
           }}
         >
           <div className={`hl-card ${showBack ? "flipped" : ""}`}>
-            {/* FRONT */}
             <div className="hl-face hl-front">
-              <div className="hl-front-inner">
-                <div className="hl-top">
-                  <div className="hl-frame">
-                    <div className="hl-logo-box">
-                      <HunterMark />
-                    </div>
-                    <div className="hl-hatch" />
-                  </div>
-                </div>
-
-                <div className="hl-band">
-                  <div className="hl-plate">
-                    <HunterText
-                      className="hl-glyphs"
-                      tokens={tokens}
-                      label={name.trim() || "Hunter name"}
-                    />
-                  </div>
-
-                  <div className="hl-lines">
-                    <div className="hl-line">
-                      <HunterText
-                        className="hl-glyphs"
-                        tokens={LINE_ONE}
-                        align="start"
-                        label="Hunter License"
-                      />
-                    </div>
-                    <div className="hl-line">
-                      <HunterText
-                        className="hl-glyphs"
-                        tokens={LINE_TWO}
-                        align="start"
-                        label="License number"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="hl-number-row">
-                    <span>NO.</span>
-                    <strong>{number || "000"}</strong>
-                  </div>
-                </div>
-              </div>
+              <LicenseFront
+                name={name}
+                licenseNumber={licenseNumber}
+                theme={theme}
+              />
             </div>
 
-            {/* BACK */}
             <div className="hl-face hl-back">
-              <div className="hl-back-inner">
-                <div className="hl-digits">
-                  {digits.map((digit, index) => (
-                    <span key={index} className="hl-digit">
-                      {digit}
-                    </span>
-                  ))}
-                </div>
-                <div className="hl-stripe" />
-              </div>
+              <LicenseBack
+                name={name}
+                licenseNumber={licenseNumber}
+                theme={theme}
+              />
             </div>
           </div>
         </div>
