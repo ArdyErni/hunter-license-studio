@@ -187,7 +187,30 @@ function App() {
         </a>
         <span className="topbar-label"></span>
         <div className="topbar-actions">
-          {/* Buy Me A Coffee */}
+          {/* Feedback */}
+          <a
+            className="icon-btn tooltip-trigger"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSdr4lhyDY6-7dWWRgtd2sr548FFcFrcKZrCw-xv_5gvzZInVw/viewform?usp=publish-editor"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Send feedback"
+            data-tooltip="Have a suggestion or found a bug? Send feedback!"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5z" />
+            </svg>
+          </a>
+
           {/* Buy Me A Coffee */}
           <a
             className="icon-btn tooltip-trigger"
