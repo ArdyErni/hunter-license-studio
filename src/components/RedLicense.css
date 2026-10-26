@@ -11,7 +11,7 @@
    Two classes beat .hl-export-face's padding, and --u keeps it correct in export. */
 
 .hl-theme-red .hl-face {
-  padding: calc(4 * var(--u));
+  padding: calc(6 * var(--u));
 }
 
 /* ---------- shared inner panel ---------- */
@@ -69,7 +69,7 @@
   top: 0;
   bottom: 0;
   left: calc(11.7 * var(--u));
-  width: calc(11.7 * var(--u));
+  width: calc(21.5 * var(--u));
   background: var(--hl-rd-ink);
 }
 
@@ -77,15 +77,15 @@
 
 .hl-rd-number {
   position: absolute;
-  top: calc(7 * var(--u));
+  top: calc(5 * var(--u));
   right: calc(6 * var(--u));
-  max-height: calc(70 * var(--u));
+  max-height: calc(80 * var(--u));
   overflow: hidden;
   color: var(--hl-rd-ink);
   font-family: "Courier New", monospace;
-  font-size: calc(4.4 * var(--u));
-  font-weight: 700;
-  letter-spacing: calc(0.9 * var(--u));
+  font-size: calc(4 * var(--u));
+  font-weight: 400;
+  letter-spacing: calc(1.8 * var(--u));
   line-height: 1;
   white-space: nowrap;
   writing-mode: vertical-rl;
@@ -96,13 +96,13 @@
 
 .hl-rd-tag {
   position: absolute;
-  right: calc(5 * var(--u));
-  bottom: calc(5 * var(--u));
+  right: calc(4.5 * var(--u));
+  bottom: calc(6.5 * var(--u));
   display: grid;
-  grid-template-columns: calc(21 * var(--u)) calc(8.5 * var(--u));
-  grid-template-rows: calc(22 * var(--u)) calc(3 * var(--u));
-  width: calc(29.5 * var(--u));
-  height: calc(25 * var(--u));
+  grid-template-columns: calc(21 * var(--u)) calc(7.5 * var(--u));
+  grid-template-rows: calc(26 * var(--u)) calc(3 * var(--u));
+  width: calc(28.5 * var(--u));
+  height: calc(29 * var(--u));
   background: var(--hl-rd-ink);
 }
 
@@ -111,21 +111,32 @@
   place-items: center;
   grid-column: 1;
   grid-row: 1;
-  padding: calc(1.5 * var(--u));
+  padding: calc(2 * var(--u));
   background: #fff;
 }
 
 .hl-rd-tag-name {
+  position: relative;
   display: flex;
   grid-column: 2;
   grid-row: 1 / span 2;
   align-items: flex-start;
   justify-content: center;
   overflow: hidden;
-  padding: calc(1.5 * var(--u)) 0;
+  padding: 0;
 }
 
-/* Vertical name, top to bottom; kana stay upright, Latin turns sideways. */
+/* Name as stacked Hunter glyphs (SVG), upright, top to bottom. */
+
+.hl-rd-glyphs {
+  position: absolute;
+  top: calc(1.5 * var(--u));
+  left: calc(0.5 * var(--u));
+  width: calc(100% - 1 * var(--u));
+  height: calc(100% - 3 * var(--u));
+}
+
+/* Plain-text fallback, only used when the name has nothing drawable. */
 
 .hl-rd-tag-name span {
   max-height: 100%;

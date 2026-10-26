@@ -19,7 +19,7 @@ import "./BlueLicense.css";
 import "./RedLicense.css";
 import "./GreenLicense.css";
 import HunterText from "./HunterText";
-import { kanaToTokens, textToHunter } from "../utils/hunterGlyphs";
+import { kanaToTokens, textToHunter, GLYPH_DATA } from "../utils/hunterGlyphs";
 
 export type CardTheme = "green" | "blue" | "red";
 
@@ -33,25 +33,46 @@ export type FaceProps = {
 /* Shared pieces                                                              */
 /* -------------------------------------------------------------------------- */
 
-/** Fan-drawn approximation of the XX mark with a red diamond. */
-export function HunterMark() {
+/**
+ * The Hunter mark: two serif X's whose thick strokes meet to frame a red diamond.
+ * Drawn from straight-edged geometry fitted to the reference logo (every stroke
+ * leans at the same angle), so it stays crisp at any size and in the PNG export.
+ *
+ * By default the viewBox hugs the artwork. Pass `inset` for the old 5:3 box with
+ * breathing room around the mark, for badges and tags that were sized for it.
+ */
+const MARK_INK = "#070a08";
+const MARK_RED = "#c22035";
+
+export function HunterMark({ inset = false }: { inset?: boolean }) {
   return (
-    <svg viewBox="0 0 200 120" className="hl-mark" aria-hidden="true">
-      <polygon points="100,14 134,60 100,106 66,60" fill="#c8102e" />
-      <g stroke="#111" fill="none">
-        <line x1="96" y1="14" x2="30" y2="106" strokeWidth="11" />
-        <line x1="104" y1="14" x2="170" y2="106" strokeWidth="11" />
-        <line x1="30" y1="14" x2="96" y2="106" strokeWidth="3" />
-        <line x1="170" y1="14" x2="104" y2="106" strokeWidth="3" />
-        <g strokeWidth="3.5">
-          <line x1="14" y1="14" x2="46" y2="14" />
-          <line x1="82" y1="14" x2="118" y2="14" />
-          <line x1="154" y1="14" x2="186" y2="14" />
-          <line x1="12" y1="106" x2="48" y2="106" />
-          <line x1="84" y1="106" x2="116" y2="106" />
-          <line x1="152" y1="106" x2="188" y2="106" />
-        </g>
-      </g>
+    <svg
+      viewBox={inset ? "-16 -7 300 180" : "0 0 268 166"}
+      className="hl-mark"
+      aria-hidden="true"
+      shapeRendering="geometricPrecision"
+    >
+      {/* red diamond first, so the black strokes sit on top of its edges */}
+      <polygon
+        points="133.86,5.17 84.95,93.99 122.16,160 145.18,160 182.9,93.61"
+        fill={MARK_RED}
+      />
+      <polygon points="110.23,5 134.6,5 50.52,161 23.96,161" fill={MARK_INK} />
+      <polygon
+        points="133.11,5 157.27,5 243.54,161 217.81,161"
+        fill={MARK_INK}
+      />
+      <polygon points="32.09,5 38.09,5 123.19,161 117.19,161" fill={MARK_INK} />
+      <polygon
+        points="229.95,5 235.95,5 150.15,161 144.15,161"
+        fill={MARK_INK}
+      />
+      <polygon points="1,2 68,2 68,7 5.5,7" fill={MARK_INK} />
+      <polygon points="99,2 168,2 168,7 99,7" fill={MARK_INK} />
+      <polygon points="199,2 265,2 261.5,7 199,7" fill={MARK_INK} />
+      <polygon points="5,159 69,159 69,164 1.5,164" fill={MARK_INK} />
+      <polygon points="99,159 168,159 168,164 99,164" fill={MARK_INK} />
+      <polygon points="199,159 262,159 266.5,164 199,164" fill={MARK_INK} />
     </svg>
   );
 }
@@ -315,6 +336,51 @@ function RedFront({ name }: FaceProps) {
   );
 }
 
+const RED_GLYPH_W = 50; // wider than the widest glyph (49)
+const RED_GLYPH_GAP = 6;
+const RED_WORD_GAP = 16;
+
+/** Name as upright Hunter glyphs stacked top to bottom, one shared scale. */
+function RedNameGlyphs({ name }: { name: string }) {
+  const { tokens } = useMemo(() => textToHunter(name), [name]);
+
+  const { items, height } = useMemo(() => {
+    let y = 0;
+    const out: { d: string; x: number; y: number }[] = [];
+    for (const t of tokens) {
+      if (t.kind === "sep") {
+        y += RED_WORD_GAP;
+        continue;
+      }
+      const g = GLYPH_DATA[t.key];
+      out.push({ d: g.d, x: (RED_GLYPH_W - g.w) / 2, y });
+      y += g.h + RED_GLYPH_GAP;
+    }
+    return { items: out, height: Math.max(y - RED_GLYPH_GAP, 1) };
+  }, [tokens]);
+
+  // Nothing drawable (e.g. digits only): keep the old plain-text fallback.
+  if (items.length === 0) return <span>{name}</span>;
+
+  return (
+    <svg
+      className="hl-rd-glyphs"
+      viewBox={`0 0 ${RED_GLYPH_W} ${height}`}
+      preserveAspectRatio="xMidYMin meet"
+      role="img"
+      aria-label={name}
+    >
+      {items.map((it, i) => (
+        <path
+          key={i}
+          d={it.d}
+          fill="#fff"
+          transform={`translate(${it.x} ${it.y})`}
+        />
+      ))}
+    </svg>
+  );
+}
 /**
  * Black stripe near the left edge; the number runs UP the right edge (tops of
  * the digits face left); a small name tag sits at the bottom right.
@@ -339,7 +405,7 @@ function RedBack({ name, licenseNumber }: FaceProps) {
           <HunterMark />
         </div>
         <div className="hl-rd-tag-name">
-          <span>{hunterName}</span>
+          <RedNameGlyphs name={hunterName} />
         </div>
       </div>
     </div>
