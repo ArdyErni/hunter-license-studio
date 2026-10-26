@@ -251,7 +251,7 @@ function RedX({ x }: { x: number }) {
       {/* "/" top-right to bottom-left, same width */}
       <polygon points="27.25,2 30.75,2 6.75,48 3.25,48" fill="#111" />
       {/* serifs, centered on each stroke end */}
-      <g strokeWidth="2.4">
+      <g strokeWidth="2.4" stroke="#111" strokeLinecap="butt">
         <line x1="0" y1="2" x2="10" y2="2" />
         <line x1="24" y1="2" x2="34" y2="2" />
         <line x1="0" y1="48" x2="10" y2="48" />
@@ -291,6 +291,9 @@ function RedFront({ name }: FaceProps) {
           className="hl-rd-yellow"
           points="33,4 61,4 47,13.5"
           fill="#f2d51b"
+          stroke="#111"
+          strokeWidth="0.4"
+          strokeLinejoin="miter"
         />
         {/* Stem, drawn first so the other pieces overlap its ends */}
         <rect
@@ -299,17 +302,52 @@ function RedFront({ name }: FaceProps) {
           y="13"
           width="2.8"
           height="66.5"
+          fill="#f2d51b"
+          stroke="#111"
+          strokeWidth="0.4"
+          strokeLinejoin="miter"
         />
 
         {/* Crossbar (now a thin rect so it can have an outline) */}
-        <rect className="hl-rd-bar" x="14" y="78.9" width="66" height="1.2" />
+        <rect
+          className="hl-rd-bar"
+          x="14"
+          y="78.9"
+          width="66"
+          height="1.2"
+          fill="#f2d51b"
+          stroke="#111"
+          strokeWidth="0.4"
+          strokeLinejoin="miter"
+        />
 
         {/* Pennants on each side */}
-        <polygon className="hl-rd-yellow" points="5,67 5,92 15,79.5" />
-        <polygon className="hl-rd-yellow" points="89,67 89,92 79,79.5" />
+        <polygon
+          className="hl-rd-yellow"
+          points="5,67 5,92 15,79.5"
+          fill="#f2d51b"
+          stroke="#111"
+          strokeWidth="0.4"
+          strokeLinejoin="miter"
+        />
+        <polygon
+          className="hl-rd-yellow"
+          points="89,67 89,92 79,79.5"
+          fill="#f2d51b"
+          stroke="#111"
+          strokeWidth="0.4"
+          strokeLinejoin="miter"
+        />
 
         {/* Goblet on top, tip overlapping the triangle's top edge */}
-        <polygon className="hl-rd-yellow" points="33,4 61,4 47,13.5" />
+        <polygon
+          className="hl-rd-yellow"
+          points="33,4 61,4 47,13.5"
+          fill="#f2d51b"
+          stroke="#111"
+          strokeWidth="0.4"
+          strokeLinejoin="miter"
+        />
 
         <RedX x={10} />
         <RedX x={50} />
