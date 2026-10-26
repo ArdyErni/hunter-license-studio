@@ -6,7 +6,8 @@
  * never drift from what the user sees.
  *
  *   blue  -> BlueFront / BlueBack       (Basic Hunter License, matches the reference)
- *   other -> ClassicFront / ClassicBack (green + red, until they get their own designs)
+ *   red   -> RedFront / RedBack         (yellow frame, white triangle with XX)
+ *   other -> ClassicFront / ClassicBack (green, until it gets its own design)
  *
  * To add a layout for another theme, write its two components and add a
  * line to LicenseFront / LicenseBack at the bottom of this file.
@@ -14,6 +15,7 @@
 
 import { useMemo } from "react";
 import "./BlueLicense.css";
+import "./RedLicense.css";
 import HunterText from "./HunterText";
 import { kanaToTokens, textToHunter } from "../utils/hunterGlyphs";
 
@@ -211,6 +213,108 @@ function BlueBack({ licenseNumber }: FaceProps) {
 }
 
 /* -------------------------------------------------------------------------- */
+/* Red: yellow frame, white triangle with XX                                  */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * One serif "X" (thick stroke top-left to bottom-right, hairline the other way,
+ * with serifs). Drawn in a 34 x 50 box and placed by `x`; colours live in CSS.
+ */
+function RedX({ x }: { x: number }) {
+  return (
+    <g className="hl-rd-x" transform={`translate(${x} 14.5)`}>
+      <line x1="6" y1="3" x2="28" y2="47" strokeWidth="6.5" />
+      <line x1="28" y1="3" x2="6" y2="47" strokeWidth="1.4" />
+      <g strokeWidth="2">
+        <line x1="0" y1="2" x2="12" y2="2" />
+        <line x1="22" y1="2" x2="34" y2="2" />
+        <line x1="0" y1="48" x2="12" y2="48" />
+        <line x1="22" y1="48" x2="34" y2="48" />
+      </g>
+      <g strokeWidth="1.2">
+        <line x1="0.6" y1="2" x2="0.6" y2="4.6" />
+        <line x1="33.4" y1="2" x2="33.4" y2="4.6" />
+        <line x1="0.6" y1="45.4" x2="0.6" y2="48" />
+        <line x1="33.4" y1="45.4" x2="33.4" y2="48" />
+      </g>
+    </g>
+  );
+}
+
+/**
+ * The front has no text in the reference, so the whole face is a single SVG.
+ * The hunter's name is still exposed to assistive tech through aria-label,
+ * and appears visibly on the back.
+ */
+function RedFront({ name }: FaceProps) {
+  const label = name.trim();
+
+  return (
+    <div className="hl-rd-front">
+      <svg
+        className="hl-rd-art"
+        viewBox="0 0 94 137"
+        preserveAspectRatio="xMidYMid meet"
+        role="img"
+        aria-label={label ? `Hunter license of ${label}` : "Hunter license"}
+      >
+        {/* White triangle pointing down */}
+        <polygon className="hl-rd-triangle" points="4,13 90,13 47,133" />
+
+        {/* Goblet on top, stem running down to the crossbar */}
+        <polygon className="hl-rd-yellow" points="33,4 61,4 47,12" />
+        <rect
+          className="hl-rd-stem"
+          x="45.8"
+          y="12"
+          width="2.4"
+          height="67.5"
+        />
+
+        {/* Crossbar with a pennant on each side */}
+        <line className="hl-rd-bar" x1="14" y1="79.5" x2="80" y2="79.5" />
+        <polygon className="hl-rd-yellow" points="5,67 5,92 15,79.5" />
+        <polygon className="hl-rd-yellow" points="89,67 89,92 79,79.5" />
+
+        <RedX x={10} />
+        <RedX x={50} />
+      </svg>
+    </div>
+  );
+}
+
+/**
+ * Black stripe near the left edge; the number runs UP the right edge (tops of
+ * the digits face left); a small name tag sits at the bottom right.
+ */
+function RedBack({ name, licenseNumber }: FaceProps) {
+  const number = licenseNumber.trim();
+  const hunterName = name.trim();
+
+  return (
+    <div className="hl-rd-back">
+      <div className="hl-rd-stripe" />
+
+      <div
+        className="hl-rd-number"
+        aria-label={number ? `License number ${number}` : undefined}
+      >
+        {number}
+      </div>
+
+      <div className="hl-rd-tag">
+        <div className="hl-rd-tag-mark">
+          <HunterMark />
+        </div>
+        <div className="hl-rd-tag-name">
+          <span>{hunterName}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
 /* Pick the layout for a theme                                                */
 /* -------------------------------------------------------------------------- */
 
@@ -218,6 +322,8 @@ export function LicenseFront(props: FaceProps) {
   switch (props.theme) {
     case "blue":
       return <BlueFront {...props} />;
+    case "red":
+      return <RedFront {...props} />;
     default:
       return <ClassicFront {...props} />;
   }
@@ -227,6 +333,8 @@ export function LicenseBack(props: FaceProps) {
   switch (props.theme) {
     case "blue":
       return <BlueBack {...props} />;
+    case "red":
+      return <RedBack {...props} />;
     default:
       return <ClassicBack {...props} />;
   }
