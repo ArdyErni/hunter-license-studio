@@ -1,75 +1,74 @@
-# React + TypeScript + Vite
+# Hunter License Studio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive **Hunter × Hunter-inspired Hunter License Generator** that lets you create, customize, and showcase your own Hunter License.
 
-Currently, two official plugins are available:
+Inspired by the iconic licenses of the Hunter Association, this project combines collectible card design, holographic visual effects, and interactive elements to bring the Hunter License experience to life.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+🔗 **[Try Hunter License Studio](https://hunter-license-studio.vercel.app/)**
 
-## React Compiler
+## ✨ Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 🎴 **Personalized Hunter Licenses** — Create your own Hunter License with customized details.
+- 🌈 **Holographic Effects** — Experience dynamic holographic finishes inspired by collectible cards.
+- 🎨 **Multiple License Designs** — Explore distinct license styles and color variations.
+- 🪪 **Front and Back Designs** — Explore both sides of the license.
+- 🖱️ **Interactive Visual Effects** — Experience dynamic lighting, reflections, and interactive card effects.
+- 📱 **Responsive Interface** — Enjoy the experience across different screen sizes.
 
-## Expanding the ESLint configuration
+## 🛠️ Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **React** — Component-based user interface.
+- **TypeScript** — Type-safe JavaScript development.
+- **Vite** — Fast development server and build tooling.
+- **CSS** — Custom styling and interactive visual effects.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🚀 Getting Started
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Prerequisites
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- [Node.js](https://nodejs.org/)
+- npm
 
-```
+### Installation
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+1. Clone this repository:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+   ```bash
+   git clone https://github.com/ArdyErni/hunter-license-studio
+   ```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. Navigate to the project directory:
 
-```
+   ```bash
+   cd hunter-license-studio
+   ```
+
+3. Install the dependencies:
+
+   ```bash
+   npm install
+   ```
+
+4. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+5. Open the local URL displayed in your terminal.
+
+## 🎯 Project Purpose
+
+Hunter License Studio is a personal creative coding project inspired by Hunter × Hunter. It explores interactive UI development, collectible card design, and immersive visual effects through a fan-made license generation experience.
+
+The project also serves as an opportunity to experiment with frontend development, CSS effects, and the details that make digital interfaces feel engaging and tactile.
+
+## ⚠️ Disclaimer
+
+Hunter License Studio is an unofficial, fan-made project inspired by _Hunter × Hunter_. It is not affiliated with, endorsed by, or associated with Yoshihiro Togashi, Shueisha, or the official Hunter × Hunter franchise.
+
+All respective trademarks and intellectual property belong to their respective owners.
+
+## 👨‍💻 Author
+
+Created by **Ardy Erni**, a full-stack web developer who enjoys building creative web experiences, experimenting with interactive UI design, and turning ideas into functional projects.
