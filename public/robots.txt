@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hunter-license-studio.vercel.app/sitemap.xml
