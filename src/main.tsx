@@ -7,7 +7,7 @@ import LoadingScreen from './components/LoadingScreen.tsx'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <LoadingScreen>
-      {(startupComplete) => <App startupComplete={startupComplete} />}
+      {() => <App />}
     </LoadingScreen>
   </StrictMode>,
 )

@@ -27,53 +27,47 @@ function positionTooltip(element: Element) {
   trigger.style.setProperty("--tooltip-top", `${top}px`);
 }
 
-function App({ startupComplete }: { startupComplete: boolean }) {
+function App() {
   const [name, setName] = useState("GON FREECSS");
   const [licenseNumber, setLicenseNumber] = useState("109824803287");
   const [showBack, setShowBack] = useState(false);
   const [turns, setTurns] = useState(0); // quarter turns; 0 = upright
   const [theme, setTheme] = useState<CardTheme>("green");
   const [aura, setAura] = useState<AuraStyle>("ten");
-  const [musicOn, setMusicOn] = useState(true);
+  const [musicOn, setMusicOn] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const musicRequestedRef = useRef(false);
+  const musicRequestIdRef = useRef(0);
 
-  const toggleMusic = () => {
-    if (!audioRef.current) return;
-    if (musicOn) {
-      audioRef.current.pause();
-    } else {
-      if (!audioRef.current.getAttribute("src")) audioRef.current.src = MUSIC_SOURCE;
-      audioRef.current.volume = 0.15;
-      audioRef.current.play().catch(() => {});
+  const stopMusic = () => {
+    musicRequestedRef.current = false;
+    musicRequestIdRef.current += 1;
+    audioRef.current?.pause();
+    setMusicOn(false);
+  };
+
+  const toggleMusic = async () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (musicRequestedRef.current) {
+      stopMusic();
+      return;
     }
-    setMusicOn((v) => !v);
+
+    musicRequestedRef.current = true;
+    const requestId = ++musicRequestIdRef.current;
+    try {
+      if (!audio.getAttribute("src")) audio.src = MUSIC_SOURCE;
+      audio.volume = 0.15;
+      await audio.play();
+      if (requestId === musicRequestIdRef.current) setMusicOn(true);
+    } catch {
+      if (requestId === musicRequestIdRef.current) stopMusic();
+    }
   };
 
   // How the name will be written in Hunter script (shown so users can check it).
   const reading = textToHunter(name);
-
-  useEffect(() => {
-    if (!startupComplete || !musicOn) return;
-    let secondFrame = 0;
-    // Allow the revealed editor to paint before optional audio starts loading.
-    const firstFrame = requestAnimationFrame(() => {
-      secondFrame = requestAnimationFrame(() => {
-        const audio = audioRef.current;
-        if (!audio) return;
-        if (!audio.getAttribute("src")) audio.src = MUSIC_SOURCE;
-        audio.volume = 0.15;
-        if (audio.paused) {
-          audio.play().catch((error) => {
-            console.log("Autoplay prevented by browser:", error);
-          });
-        }
-      });
-    });
-    return () => {
-      cancelAnimationFrame(firstFrame);
-      cancelAnimationFrame(secondFrame);
-    };
-  }, [startupComplete, musicOn]);
 
   useEffect(() => {
     const reposition = () => {
@@ -387,6 +381,7 @@ function App({ startupComplete }: { startupComplete: boolean }) {
             ref={audioRef}
             loop
             preload="none"
+            onError={stopMusic}
           />
         </aside>
 
