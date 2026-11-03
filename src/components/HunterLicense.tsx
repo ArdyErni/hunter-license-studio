@@ -191,7 +191,7 @@ function HunterLicense({
           }}
         >
           <div className={`hl-card ${showBack ? "flipped" : ""}`}>
-            <div className="hl-face hl-front">
+            <div className="hl-face hl-front" aria-hidden={showBack}>
               <LicenseFront
                 name={name}
                 licenseNumber={licenseNumber}
@@ -199,7 +199,7 @@ function HunterLicense({
               />
             </div>
 
-            <div className="hl-face hl-back">
+            <div className="hl-face hl-back" aria-hidden={!showBack}>
               <LicenseBack
                 name={name}
                 licenseNumber={licenseNumber}

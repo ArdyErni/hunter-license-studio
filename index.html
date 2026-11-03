@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
 
-    <link rel="icon" type="image/svg+xml" href="/images/hxh-logo.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/images/hxh-favicon-48.png" />
+    <link rel="preload" as="image" type="image/webp" href="/images/anime-hxh-logo-1120.webp" fetchpriority="high" />
     <link rel="canonical" href="https://hunter-license-studio.vercel.app/" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,11 +15,11 @@
     />
 
     <!-- Primary SEO -->
-    <title>Hunter License Studio | Hunter × Hunter License Generator</title>
+    <title>Hunter x Hunter License Generator | Hunter License Studio</title>
 
     <meta
       name="description"
-      content="Create your own Hunter License with Hunter License Studio, an interactive Hunter × Hunter-inspired license generator featuring unique card designs and holographic effects."
+      content="Create a custom Hunter x Hunter license with your name, card design and Nen aura. Download a plain PNG, holographic PNG or animated GIF. Free in your browser."
     />
 
     <meta name="theme-color" content="#101820" />
@@ -54,9 +55,30 @@
       name="twitter:description"
       content="Create your own Hunter License with interactive designs and holographic effects inspired by Hunter × Hunter."
     />
+    <style>
+      html { background: #10110f; color: #eeeee5; }
+      body { margin: 0; display: flow-root; }
+      body > #public-introduction { max-width: 600px; margin: 48px auto; padding: 0 24px; font-family: "Segoe UI", sans-serif; }
+      .js-starting body > #public-introduction { position: absolute; visibility: hidden; }
+    </style>
+    <script>
+      // Keep the existing black intro on JS-enabled loads. Failed bootstraps
+      // still reveal the useful HTML introduction rather than a blank page.
+      document.documentElement.classList.add('js-starting');
+      setTimeout(() => {
+        if (!document.getElementById('root')?.firstElementChild) {
+          document.documentElement.classList.remove('js-starting');
+        }
+      }, 3000);
+    </script>
   </head>
 
   <body>
+    <section id="public-introduction" class="section-heading" aria-labelledby="generator-title">
+      <h1 id="generator-title">Hunter × Hunter License Generator</h1>
+      <p>Create a fan-made Hunter × Hunter license with your name, card design, and Nen aura. Download a plain PNG, holographic PNG, or animated GIF.</p>
+    </section>
+    <noscript><p style="padding: 0 24px">Enable JavaScript to customize your license and export PNG or GIF files.</p></noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

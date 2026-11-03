@@ -26,17 +26,12 @@ function HunterText({
   className,
 }: HunterTextProps) {
   let x = EDGE;
-  const placed = tokens.map((token) => {
-    if (token.kind === "sep") {
-      const item = { token, x, w: SEPARATOR_WIDTH };
-      x += SEPARATOR_WIDTH + GLYPH_GAP;
-      return item;
-    }
-    const shape = GLYPH_DATA[token.key];
-    const item = { token, x, w: shape.w };
-    x += shape.w + GLYPH_GAP;
-    return item;
-  });
+  const placed: { token: GlyphToken; x: number; w: number }[] = [];
+  for (const token of tokens) {
+    const w = token.kind === "sep" ? SEPARATOR_WIDTH : GLYPH_DATA[token.key].w;
+    placed.push({ token, x, w });
+    x += w + GLYPH_GAP;
+  }
 
   const width = Math.max(x - GLYPH_GAP + EDGE, CELL_HEIGHT);
   const xAlign = align === "start" ? "xMin" : align === "end" ? "xMax" : "xMid";
@@ -46,8 +41,10 @@ function HunterText({
       className={className}
       viewBox={`0 0 ${width} ${CELL_HEIGHT}`}
       preserveAspectRatio={`${xAlign}YMid meet`}
-      role="img"
+      role={label ? "img" : undefined}
       aria-label={label}
+      aria-hidden={label ? undefined : true}
+      focusable="false"
       fill="currentColor"
     >
       {placed.map(({ token, x: gx }, index) => {

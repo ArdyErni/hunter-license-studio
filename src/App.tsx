@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import "./App.css";
 import HunterLicense from "./components/HunterLicense";
 import ExportControls from "./components/ExportControls";
+import PublicIntroduction from "./components/PublicIntroduction";
 import type { CardTheme, AuraStyle } from "./components/HunterLicense";
 import { textToHunter } from "./utils/hunterGlyphs";
 
@@ -11,7 +12,22 @@ const THEMES: { id: CardTheme; label: string }[] = [
   { id: "red", label: "Red" },
 ];
 
-function App() {
+const MUSIC_SOURCE = "/sound/studio-megaane-departure.mp3";
+
+function positionTooltip(element: Element) {
+  const trigger = element.closest<HTMLElement>(".tooltip-trigger");
+  if (!trigger) return;
+  const bounds = trigger.getBoundingClientRect();
+  const tooltip = getComputedStyle(trigger, "::after");
+  const width = parseFloat(tooltip.width);
+  const height = parseFloat(tooltip.height);
+  const left = Math.max(16, Math.min(bounds.left + bounds.width / 2 - width / 2, window.innerWidth - width - 16));
+  const top = Math.max(16, Math.min(bounds.bottom + 10, window.innerHeight - height - 16));
+  trigger.style.setProperty("--tooltip-left", `${left}px`);
+  trigger.style.setProperty("--tooltip-top", `${top}px`);
+}
+
+function App({ startupComplete }: { startupComplete: boolean }) {
   const [name, setName] = useState("GON FREECSS");
   const [licenseNumber, setLicenseNumber] = useState("109824803287");
   const [showBack, setShowBack] = useState(false);
@@ -26,6 +42,8 @@ function App() {
     if (musicOn) {
       audioRef.current.pause();
     } else {
+      if (!audioRef.current.getAttribute("src")) audioRef.current.src = MUSIC_SOURCE;
+      audioRef.current.volume = 0.15;
       audioRef.current.play().catch(() => {});
     }
     setMusicOn((v) => !v);
@@ -35,14 +53,38 @@ function App() {
   const reading = textToHunter(name);
 
   useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    audio.volume = 0.15;
-
-    audio.play().catch((error) => {
-      console.log("Autoplay prevented by browser:", error);
+    if (!startupComplete || !musicOn) return;
+    let secondFrame = 0;
+    // Allow the revealed editor to paint before optional audio starts loading.
+    const firstFrame = requestAnimationFrame(() => {
+      secondFrame = requestAnimationFrame(() => {
+        const audio = audioRef.current;
+        if (!audio) return;
+        if (!audio.getAttribute("src")) audio.src = MUSIC_SOURCE;
+        audio.volume = 0.15;
+        if (audio.paused) {
+          audio.play().catch((error) => {
+            console.log("Autoplay prevented by browser:", error);
+          });
+        }
+      });
     });
+    return () => {
+      cancelAnimationFrame(firstFrame);
+      cancelAnimationFrame(secondFrame);
+    };
+  }, [startupComplete, musicOn]);
+
+  useEffect(() => {
+    const reposition = () => {
+      document.querySelectorAll(".tooltip-trigger:hover, .tooltip-trigger:focus-visible").forEach(positionTooltip);
+    };
+    window.addEventListener("resize", reposition);
+    window.addEventListener("scroll", reposition, { passive: true });
+    return () => {
+      window.removeEventListener("resize", reposition);
+      window.removeEventListener("scroll", reposition);
+    };
   }, []);
 
   return (
@@ -51,7 +93,9 @@ function App() {
         <a className="brand" href="#">
           <img
             className="brand-logo"
-            src="/images/hxh-logo.png"
+            src="/images/hxh-logo-140.webp"
+            width={140}
+            height={100}
             alt="Hunter License Studio"
           />
           <span>
@@ -60,7 +104,11 @@ function App() {
           </span>
         </a>
         <span className="topbar-label"></span>
-        <div className="topbar-actions">
+        <div
+          className="topbar-actions"
+          onPointerOver={(event) => positionTooltip(event.target as Element)}
+          onFocusCapture={(event) => positionTooltip(event.target)}
+        >
           {/* Feedback */}
           <a
             className="icon-btn tooltip-trigger"
@@ -216,11 +264,7 @@ function App() {
 
       <section className="workspace">
         <aside className="editor">
-          <div className="section-heading">
-            {/* <span className="eyebrow">CUSTOMIZATION</span> */}
-            <h1>Create your license.</h1>
-            <p>Make your mark as a Hunter.</p>
-          </div>
+          <PublicIntroduction />
           <div className="form-section">
             <label htmlFor="hunter-name">Hunter name</label>
             <input
@@ -230,8 +274,9 @@ function App() {
               maxLength={24}
               onChange={(event) => setName(event.target.value.toUpperCase())}
               placeholder="Enter hunter name"
+              aria-describedby="hunter-name-reading hunter-name-help"
             />
-            <p className="field-hint">
+            <p className="field-hint" id="hunter-name-reading">
               Written as{" "}
               <strong className="field-reading">{reading.kana || "—"}</strong>
               {reading.skipped.length > 0 && (
@@ -241,7 +286,7 @@ function App() {
                 </span>
               )}
             </p>
-            <p className="field-hint field-hint--faint">
+            <p className="field-hint field-hint--faint" id="hunter-name-help">
               English names are converted by sound, so the reading is an
               approximation. Type katakana (e.g. ゴン) to set it exactly.
             </p>
@@ -261,8 +306,8 @@ function App() {
               placeholder="Enter license number"
             />
           </div>
-          <div className="form-section">
-            <label>Card color</label>
+          <fieldset className="form-section">
+            <legend>Card color</legend>
             <div className="side-selector side-selector--three">
               {THEMES.map((option) => (
                 <button
@@ -271,14 +316,15 @@ function App() {
                     theme === option.id ? "side-option active" : "side-option"
                   }
                   onClick={() => setTheme(option.id)}
+                  aria-pressed={theme === option.id}
                 >
                   {option.label}
                 </button>
               ))}
             </div>
-          </div>
-          <div className="form-section">
-            <label>Nen Aura</label>
+          </fieldset>
+          <fieldset className="form-section">
+            <legend>Nen Aura</legend>
             <div className="side-selector aura-selector">
               {(
                 [
@@ -295,16 +341,17 @@ function App() {
                     aura === opt.id ? " active" : ""
                   }`}
                   onClick={() => setAura(opt.id)}
+                  aria-pressed={aura === opt.id}
                 >
                   <span className="aura-label">{opt.label}</span>
                   <span className="aura-sub">{opt.sub}</span>
                 </button>
               ))}
             </div>
-          </div>
+          </fieldset>
           <div className="editor-note">
             <div className="editor-note-top">
-              <span className="note-symbol">✳</span>
+              <span className="note-symbol" aria-hidden="true">✳</span>
               <p>
                 Your license is a fan-made design inspired by Hunter × Hunter.
                 Customize it and make it your own.
@@ -339,8 +386,7 @@ function App() {
           <audio
             ref={audioRef}
             loop
-            preload="auto"
-            src="/sound/studio-megaane-departure.mp3"
+            preload="none"
           />
         </aside>
 

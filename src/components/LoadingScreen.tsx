@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import './LoadingScreen.css'
 
-export default function LoadingScreen({ children }: { children: ReactNode }) {
+export default function LoadingScreen({ children }: { children: (ready: boolean) => ReactNode }) {
   const [loading, setLoading] = useState(true)
   const [logoReady, setLogoReady] = useState(false)
 
@@ -13,16 +13,16 @@ export default function LoadingScreen({ children }: { children: ReactNode }) {
         inert={loading}
         aria-hidden={loading || undefined}
       >
-        {children}
+        {children(!loading)}
       </div>
       {loading && (
         <div className="loading-screen">
           <img
             className={`loading-screen__logo${logoReady ? ' loading-screen__logo--ready' : ''}`}
-            src="/images/anime-hxh-logo.png"
+            src="/images/anime-hxh-logo-1120.webp"
             alt="Hunter × Hunter"
-            width={3840}
-            height={2160}
+            width={1120}
+            height={630}
             fetchPriority="high"
             onLoad={() => setLogoReady(true)}
             onError={() => setLoading(false)}
