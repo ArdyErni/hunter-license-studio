@@ -1,0 +1,54 @@
+.intro-app {
+  display: contents;
+}
+
+.intro-app--hidden {
+  visibility: hidden;
+}
+
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #000000;
+  touch-action: none;
+}
+
+.loading-screen__logo {
+  display: block;
+  width: min(560px, 90vw);
+  height: auto;
+  max-height: 90vh;
+  max-height: 90dvh;
+  object-fit: contain;
+  opacity: 0;
+}
+
+.loading-screen__logo--ready {
+  animation: loading-logo-intro 1.8s ease-in-out both;
+}
+
+@keyframes loading-logo-intro {
+  0%, 100% {
+    opacity: 0;
+  }
+
+  30%, 70% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-screen__logo--ready {
+    animation-name: loading-logo-still;
+  }
+
+  @keyframes loading-logo-still {
+    from, to {
+      opacity: 1;
+    }
+  }
+}
