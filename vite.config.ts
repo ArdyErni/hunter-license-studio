@@ -4,4 +4,6 @@ import { defineConfig } from 'vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  // Discover the worker-only dependency before the first GIF export in dev.
+  optimizeDeps: { include: ['gifenc'] },
 })

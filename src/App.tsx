@@ -1,12 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import { createRoot } from "react-dom/client";
-import { createElement } from "react";
 import "./App.css";
 import HunterLicense from "./components/HunterLicense";
-import { LicenseExportPanel } from "./components/HunterLicense";
+import ExportControls from "./components/ExportControls";
 import type { CardTheme, AuraStyle } from "./components/HunterLicense";
 import { textToHunter } from "./utils/hunterGlyphs";
-import { toPng } from "html-to-image";
 
 const THEMES: { id: CardTheme; label: string }[] = [
   { id: "green", label: "Green" },
@@ -37,129 +34,6 @@ function App() {
   // How the name will be written in Hunter script (shown so users can check it).
   const reading = textToHunter(name);
 
-  const handleExport = async () => {
-    // Card dimensions: portrait ratio 0.7 wide × 1.0 tall.
-    // Each panel is 420 × 600px; the wrapper adds 12px padding and 16px gap.
-    console.log("EXPORT BUTTON CLICKED");
-    const PANEL_W = 420;
-    const PANEL_H = 600;
-    const PAD = 12;
-    const GAP = 16;
-    const TOTAL_W = PAD * 2 + PANEL_W * 2 + GAP;
-    const TOTAL_H = PAD * 2 + PANEL_H;
-
-    // Keep the capture host paintable at its own origin. Moving it offscreen
-    // as a child preserves its layout while avoiding a transparent capture.
-    const wrapper = document.createElement("div");
-    Object.assign(wrapper.style, {
-      position: "absolute",
-      top: "0",
-      left: "-9999px",
-      width: `${TOTAL_W}px`,
-      height: `${TOTAL_H}px`,
-      overflow: "hidden",
-      pointerEvents: "none",
-    });
-
-    const host = document.createElement("div");
-    Object.assign(host.style, {
-      pointerEvents: "none",
-      width: `${TOTAL_W}px`,
-      height: `${TOTAL_H}px`,
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "stretch",
-      gap: `${GAP}px`,
-      padding: `${PAD}px`,
-      boxSizing: "border-box",
-      background: "#1a1a18",
-      zIndex: "0",
-    });
-
-    // Each panel wrapper gives cqw a concrete inline size to resolve against.
-    const makeSlot = () => {
-      const slot = document.createElement("div");
-      Object.assign(slot.style, {
-        width: `${PANEL_W}px`,
-        height: `${PANEL_H}px`,
-        flexShrink: "0",
-        position: "relative",
-        containerType: "inline-size",
-      });
-      return slot;
-    };
-
-    const frontSlot = makeSlot();
-    const backSlot = makeSlot();
-    host.appendChild(frontSlot);
-    host.appendChild(backSlot);
-    wrapper.appendChild(host);
-    document.body.appendChild(wrapper);
-    console.log("Export host:", host);
-    console.log("Export host dimensions:", host.getBoundingClientRect());
-    console.log("Export host HTML:", host.outerHTML);
-
-    const frontRoot = createRoot(frontSlot);
-    const backRoot = createRoot(backSlot);
-
-    try {
-      frontRoot.render(
-        createElement(LicenseExportPanel, {
-          name,
-          licenseNumber,
-          theme,
-          side: "front",
-        }),
-      );
-      backRoot.render(
-        createElement(LicenseExportPanel, {
-          name,
-          licenseNumber,
-          theme,
-          side: "back",
-        }),
-      );
-
-      // Wait for React to render both panels.
-      await new Promise<void>((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-      );
-
-      // Wait for React to render both panels.
-      await new Promise<void>((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-      );
-
-      console.log("Front slot HTML:", frontSlot.innerHTML);
-      console.log("Back slot HTML:", backSlot.innerHTML);
-      console.log("Front slot dimensions:", frontSlot.getBoundingClientRect());
-      console.log("Back slot dimensions:", backSlot.getBoundingClientRect());
-
-      // Two rAFs: first lets React flush, second lets the browser paint.
-      await new Promise<void>((res) =>
-        requestAnimationFrame(() => requestAnimationFrame(() => res())),
-      );
-
-      const dataUrl = await toPng(host, {
-        pixelRatio: 3,
-        cacheBust: true,
-        width: TOTAL_W,
-        height: TOTAL_H,
-      });
-
-      const link = document.createElement("a");
-      link.download = `HLS_${name}_${licenseNumber}.png`;
-      link.href = dataUrl;
-      link.click();
-    } catch (err) {
-      console.error("Export failed:", err);
-      alert("Export failed. Check the console for details.");
-    } finally {
-      frontRoot.unmount();
-      backRoot.unmount();
-      wrapper.remove();
-    }
-  };
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -438,13 +312,12 @@ function App() {
             </div>
 
             <div className="editor-actions">
-              <button
-                type="button"
-                className="export-button"
-                onClick={handleExport}
-              >
-                Export PNG
-              </button>
+              <ExportControls
+                name={name}
+                licenseNumber={licenseNumber}
+                theme={theme}
+                aura={aura}
+              />
 
               <button
                 type="button"
